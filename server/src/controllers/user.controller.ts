@@ -49,7 +49,6 @@ export class UsersController {
   async delete(req: Request, res: Response) {
     const { id } = req.params;
     const user = await this.usersService.findByIdAndDelete(id);
-    console.log(user);
     if (!user) return res.status(400).json({ message: 'User not found!' });
     return res.sendStatus(204);
   }
