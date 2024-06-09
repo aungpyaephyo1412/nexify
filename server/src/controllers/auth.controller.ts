@@ -48,15 +48,14 @@ export const AuthController = {
     const { identifier, password } = req.body;
     const response = await UserModel.findOne({
       $or: [{ email: identifier }, { username: identifier }],
-    }).select("-followers -following -posts -stories -notifications -messages -rememberToken -expiredToken -resetToken");
+    }).select(
+      '-followers -following -posts -stories -notifications -messages -rememberToken -expiredToken -resetToken'
+    );
     if (!response)
       return res.status(400).send({ message: 'Something went wrong!' });
     const user = response.toObject();
     const check = await bcrypt.compare(password, user.password);
-    const {
-      password: p,
-      ...userData
-    } = user;
+    const { password: p, ...userData } = user;
     if (!check)
       return res
         .status(400)
