@@ -1,9 +1,8 @@
 "use client";
 import { login } from "@/app/(auth)/_action";
 import SubmitButton from "@/components/submit-button";
-import { Button } from "@/components/ui/button";
 import ValidationInput from "@/components/validation-input";
-import { userAuthSchema } from "@/types/user.types";
+import { userLoginSchema } from "@/types/user.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -12,56 +11,69 @@ const LoginForm = () => {
   const {
     register,
     handleSubmit,
-    reset,
     setError,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: zodResolver(userAuthSchema),
+    resolver: zodResolver(userLoginSchema),
   });
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
         try {
-          await login({ identifier: data.email, password: data.password });
+          await login({ identifier: data.identifier, password: data.password });
         } catch (err) {
           setError("root", { message: "Email or password does not work!" });
         }
       })}
       className="space-y-5 p-5"
     >
+      {errors.root && (
+        <p className="text-sm bg-red-300 border border-gray-500 py-2 text-center px-4">
+          {errors.root.message}
+        </p>
+      )}
       <ValidationInput
-        isError={!!errors?.email?.message}
-        errorMessage={errors?.email?.message as string}
-        type={"email"}
-        {...register("email")}
+        id="emailOrUsername"
+        title="Email or Username"
+        isError={!!errors?.identifier?.message}
+        errorMessage={errors?.identifier?.message as string}
+        {...register("identifier")}
         placeholder={"Enter email or username"}
-        className="h-12"
+        className="border border-gray-500"
       />
       <ValidationInput
+        id="password"
+        title="Password"
         isError={!!errors?.password?.message}
         errorMessage={errors?.password?.message as string}
         type={"password"}
         {...register("password")}
         placeholder={"Enter password"}
-        className="h-12"
+        className="border border-gray-500"
       />
       {errors.root && (
         <p className="text-sm text-red-500">{errors.root.message}</p>
       )}
+      <div className="w-full flex justify-between items-center ">
+        <Link
+          className="text-red-500
+         hover:underline font-medium text-sm"
+          href={"/forgot-password"}
+        >
+          Forgot Password
+        </Link>
+        <Link
+          className="text-blue-500 hover:underline font-medium text-sm"
+          href={"/register"}
+        >
+          Create New Account
+        </Link>
+      </div>
       <SubmitButton
         className="w-full"
         name={"Login"}
         isLoading={isSubmitting}
       />
-      <hr />
-      <div className="grid grid-cols-2 gap-5">
-        <Button asChild variant="outline">
-          <Link href={"/forgot-password"}>Forgot Password</Link>
-        </Button>
-        <Button variant={"secondary"} className="w-full" asChild>
-          <Link href={"/register"}>Create New Account</Link>
-        </Button>
-      </div>
     </form>
   );
 };

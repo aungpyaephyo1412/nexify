@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import BackNavigation from "@/components/back-navigation";
 import NavButton from "@/components/nav-button";
 import NotFound from "@/components/not-found";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import safeFetch from "@/lib/safeFetch";
 import { UserByIdDataSchema } from "@/types/user.types";
 import { Calendar } from "lucide-react";
@@ -33,7 +34,13 @@ const Layout = async ({
       <div>
         <div className="h-[250px] w-full bg-neutral-400"></div>
         <div className="w-full flex justify-between items-center px-3 lg:px-6 mb-7">
-          <div className="size-[100px] lg:size-[150px] rounded-full bg-black -mt-[70px] "></div>
+          <div className="size-[100px] lg:size-[150px] rounded-full bg-black -mt-[45px] lg:-mt-[70px] border border-blue-500">
+            <Avatar className="size-full rounded-full bg-white">
+              <AvatarFallback>
+                {session?.user?.name?.substring(0, 2)}
+              </AvatarFallback>
+            </Avatar>
+          </div>
           {session?.user.username === slug && (
             <button className="border border-gray-500 px-4 py-2 rounded-full text-sm">
               Edit Profile

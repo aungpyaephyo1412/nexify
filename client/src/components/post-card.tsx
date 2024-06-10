@@ -1,3 +1,4 @@
+import PostProfileSkeleton from "@/components/fallback-ui/post-profile-skeleton";
 import PostDialog from "@/components/post-dialog";
 import PostProfile from "@/components/post-profile";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -12,6 +13,7 @@ import { Bookmark, Heart, MessageSquareMore } from "lucide-react";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
 const PostCard = ({
   post,
@@ -29,13 +31,9 @@ const PostCard = ({
     >
       <div className="flex justify-between items-start">
         <div className="flex gap-2">
-          <div className="size-[45px] bg-black rounded relative overflow-hidden">
-            <Avatar className="size-full rounded-none">
-              <AvatarFallback className="rounded-none">
-                {post.user.name.substring(0, 2)}
-              </AvatarFallback>
-            </Avatar>
-          </div>
+          <Avatar className="size-[45px] border border-gray-500">
+            <AvatarFallback>{post.user.name.substring(0, 2)}</AvatarFallback>
+          </Avatar>
         </div>
       </div>
       <div className="flex-1">
@@ -56,7 +54,9 @@ const PostCard = ({
                 sideOffset={5}
                 className="shadow-md bg-neutral-200"
               >
-                <PostProfile userName={post.user.username} />
+                <Suspense fallback={<PostProfileSkeleton />}>
+                  <PostProfile userName={post.user.username} />
+                </Suspense>
               </TooltipContent>
             </Tooltip>
             <div className="flex gap-1 font-mono">

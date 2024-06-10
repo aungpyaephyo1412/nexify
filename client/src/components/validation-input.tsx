@@ -36,7 +36,7 @@ const ValidationInput = forwardRef<HTMLInputElement, Props>(
                 className="size-full hover:bg-black/10 px-4 py-2 rounded"
                 onClick={() => setOpen((prevState) => !prevState)}
               >
-                {open ? <Eye size={18} /> : <EyeOff size={18} />}
+                {open ? <Eye size={14} /> : <EyeOff size={14} />}
               </button>
             </div>
           </div>

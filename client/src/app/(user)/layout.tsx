@@ -11,10 +11,10 @@ const Layout = async ({ children }: { children: ReactNode }) => {
     redirect("/verify");
   }
   return (
-    <main className="grid lg:grid-cols-8 max-w-screen-xl mx-auto">
+    <main className="grid lg:grid-cols-8 max-w-screen-xl mx-auto min-h-dvh">
       <SideNavigation />
       <div className="w-full lg:w-auto col-span-4">
-        <div className="min-h-screen pb-24 ">
+        <div className="min-h-dvh pb-24 ">
           {children}
           <BottomNavigation />
         </div>

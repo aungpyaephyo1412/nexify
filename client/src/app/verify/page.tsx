@@ -6,7 +6,6 @@ export const metadata = {
 };
 const Page = async () => {
   const session = await auth();
-  console.log(session);
   return <VerifyForm email={session!.user.email} />;
 };
 
