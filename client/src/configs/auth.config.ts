@@ -17,7 +17,10 @@ export const authConfig = {
         }
         return true;
       } else {
-        return nextUrl.pathname === "/register";
+        return (
+          nextUrl.pathname.startsWith("/forgot-password") ||
+          nextUrl.pathname === "/register"
+        );
       }
     },
   },

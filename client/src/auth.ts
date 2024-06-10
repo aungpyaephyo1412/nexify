@@ -5,7 +5,7 @@ import { LoginUserSchema } from "@/types/user.types";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut, unstable_update, handlers } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
@@ -16,6 +16,10 @@ export const { auth, signIn, signOut } = NextAuth({
           {
             cache: "no-store",
             method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
             body: JSON.stringify(credentials),
           }
         );
@@ -35,7 +39,10 @@ export const { auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, session, trigger }) {
+      if (trigger === "update") {
+        return { ...token, isVerified: session.user.isVerified };
+      }
       if (user)
         return {
           ...token,

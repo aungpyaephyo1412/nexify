@@ -1,33 +1,17 @@
 import AuthTemplate from "@/components/auth-template";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
+import LoginForm from "@/components/login-form";
 
-const Page = () => {
+const Page = ({
+  searchParams: { message },
+}: {
+  searchParams: { message: string };
+}) => {
   return (
     <AuthTemplate>
-      <form className="space-y-5 p-5">
-        <Input
-          placeholder={"Enter email or username"}
-          className="text-white h-12"
-        />
-        <Input placeholder={"Enter password"} className="text-white h-12" />
-        <Button variant={"secondary"} className="w-full">
-          Login
-        </Button>
-        <Link
-          href={"/forgot-password"}
-          className="text-blue-500 hover:underline w-full text-center block"
-        >
-          Forgot Password
-        </Link>
-        <hr />
-        <div className="w-full justify-center items-center flex">
-          <Button variant={"destructive"} asChild>
-            <Link href={"/register"}>Create New Account</Link>
-          </Button>
-        </div>
-      </form>
+      {message && (
+        <h1 className="text-sm font-semibold mb-5 p-5 pb-0">{message}</h1>
+      )}
+      <LoginForm />
     </AuthTemplate>
   );
 };

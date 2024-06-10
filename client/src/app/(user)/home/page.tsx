@@ -1,11 +1,18 @@
-"use client";
 import PostCard from "@/components/post-card";
+import safeFetch from "@/lib/safeFetch";
+import { PostsSchema } from "@/types/post.types";
 
-const Page = () => {
+const Page = async () => {
+  const { data, error } = await safeFetch(PostsSchema, "/posts", {
+    next: {
+      revalidate: false,
+      tags: ["home-posts"],
+    },
+  });
   return (
     <div className="space-y-5">
-      {Array.from({ length: 50 }).map((_, index) => (
-        <PostCard key={index} />
+      {data.data.map((post) => (
+        <PostCard key={post._id} post={post} />
       ))}
     </div>
   );

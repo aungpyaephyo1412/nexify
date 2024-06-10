@@ -1,15 +1,10 @@
-import { Home, Search, Settings, SquarePlus, UserRound } from "lucide-react";
+import { Home, Search, Settings, SquarePlus } from "lucide-react";
 
 const sideNavigationData = [
   {
     title: "Home",
-    href: "/",
+    href: "/home",
     icon: Home,
-  },
-  {
-    title: "Profile",
-    href: "/profile",
-    icon: UserRound,
   },
   {
     title: "Search",

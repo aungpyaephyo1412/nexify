@@ -1,18 +1,25 @@
+import { auth } from "@/auth";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Ellipsis } from "lucide-react";
 import Link from "next/link";
 
-const RightNavigation = () => {
+const RightNavigation = async () => {
+  const session = await auth();
   return (
-    <div className="border-s border-s-gray-500/50 w-[320px] h-screen sticky top-0 p-6 hidden lg:block ">
+    <div className="col-span-2 border-s border-s-gray-500/50 max-w-[300px] h-screen sticky top-0 p-6 hidden lg:block ">
       <Link
-        href={"/profile"}
-        className="w-full flex justify-between items-center"
+        href={`/${session?.user.username}`}
+        className="w-full flex justify-between items-center gap-5"
       >
-        <div className="flex gap-2 items-center">
-          <div className="size-[50px] rounded-full bg-white"></div>
-          <div className="space-y-1">
-            <h1 className="text-sm text-start">Typle</h1>
-            <p className="text-xs">@typle_x</p>
+        <div className="flex-1 w-full flex gap-2 items-center">
+          <Avatar className="size-[50px] rounded-full bg-white">
+            <AvatarFallback>
+              {session?.user?.name?.substring(0, 2)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1 fspace-y-1 w-fit">
+            <h1 className="text-sm text-start">{session?.user.name}</h1>
+            <p className="text-xs max-w-full">@{session?.user.username}</p>
           </div>
         </div>
         <Ellipsis />
