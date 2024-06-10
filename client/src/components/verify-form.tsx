@@ -1,5 +1,6 @@
 "use client";
 import { logout } from "@/app/(auth)/_action";
+import { redirectTo } from "@/app/verify/_action";
 import SubmitButton from "@/components/submit-button";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +13,6 @@ import { RegisterReturnSchema, userVerifySchema } from "@/types/user.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 
 const VerifyForm = ({ email }: { email: string }) => {
@@ -26,12 +26,11 @@ const VerifyForm = ({ email }: { email: string }) => {
     resolver: zodResolver(userVerifySchema),
   });
   const session = useSession({ required: true });
-  const router = useRouter();
   return (
     <form
       className="w-full space-y-5"
       onSubmit={handleSubmit(async (data) => {
-        const { data: d, error } = await safeFetch(
+        const { error } = await safeFetch(
           RegisterReturnSchema,
           "/auth/verify",
           {
@@ -56,10 +55,7 @@ const VerifyForm = ({ email }: { email: string }) => {
             isVerified: true,
           },
         });
-        router.push("/home");
-        // await logout({
-        //   redirectTo: "/login?message=Verify your account,Enter login again",
-        // });
+        await redirectTo("/home");
       })}
     >
       <Controller

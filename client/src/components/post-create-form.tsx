@@ -39,7 +39,7 @@ const PostCreateForm = () => {
         <TextareaAutosize
           {...register("caption")}
           maxLength={250}
-          className="text-lg outline-none border-b border-b-gray-500 bg-transparent w-full py-3 pr-2 mb-3"
+          className="text-sm outline-none border-b border-b-gray-500 bg-transparent w-full py-3 pr-2 mb-3"
           placeholder={"What is happening?"}
         />
         <div className="w-full flex justify-between items-center">
@@ -58,9 +58,9 @@ const PostCreateForm = () => {
               multiple={false}
             />
           </div>
-          <button className="text-xs px-4 py-2 rounded-full text-white bg-blue-500">
+          <button className="text-xs px-8 py-2 rounded-full text-white bg-blue-500">
             {isSubmitting ? (
-              <Loader2 size={15} className="text-blue-500 animate-spin" />
+              <Loader2 size={15} className="text-white animate-spin" />
             ) : (
               "Post"
             )}

@@ -1,12 +1,14 @@
 "use server";
 
 import { signIn, signOut, unstable_update } from "@/auth";
+import { redirect } from "next/navigation";
 interface LoginSchema {
   identifier: string;
   password: string;
 }
 export const login = async (formData: LoginSchema) => {
   await signIn("credentials", { ...formData });
+  redirect("/home");
 };
 
 interface logoutParams {
