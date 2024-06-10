@@ -1,3 +1,5 @@
+"use client";
+import { deletePost } from "@/app/(user)/posts/_action";
 import {
   Dialog,
   DialogClose,
@@ -5,8 +7,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Ellipsis } from "lucide-react";
+import Link from "next/link";
 
-const PostDialog = () => {
+const PostDialog = ({ postId }: { postId: string }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -28,14 +31,17 @@ const PostDialog = () => {
             </p>
             <hr className="h-[2px] bg-gray-200" />
           </button>
-          <button className="w-full text-center">
+          <Link href={`/posts/${postId}`} className="w-full text-center">
             <p className="text-center py-2.5 font-semibold text-sm">
               Go to post
             </p>
             <hr className="h-[2px] bg-gray-200" />
-          </button>
+          </Link>
           <DialogClose asChild>
-            <button className="w-full text-center">
+            <button
+              onClick={async () => await deletePost(postId)}
+              className="w-full text-center"
+            >
               <p className="text-center py-2.5 font-semibold text-sm">Cancel</p>
             </button>
           </DialogClose>

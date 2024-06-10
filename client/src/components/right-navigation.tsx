@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import LogOut from "@/components/log-out";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Ellipsis } from "lucide-react";
 import Link from "next/link";
@@ -6,7 +7,7 @@ import Link from "next/link";
 const RightNavigation = async () => {
   const session = await auth();
   return (
-    <div className="col-span-2 border-s border-s-gray-500/50 max-w-[300px] h-screen sticky top-0 p-6 hidden lg:block ">
+    <div className="col-span-2 h-screen  border-s border-s-gray-500/50 max-w-[300px] flex-col sticky top-0 p-6 hidden lg:flex ">
       <Link
         href={`/${session?.user.username}`}
         className="w-full flex justify-between items-center gap-5"
@@ -24,6 +25,9 @@ const RightNavigation = async () => {
         </div>
         <Ellipsis />
       </Link>
+      <div className="mt-auto w-full">
+        <LogOut />
+      </div>
     </div>
   );
 };

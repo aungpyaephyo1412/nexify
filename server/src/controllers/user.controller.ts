@@ -17,7 +17,7 @@ export const UsersController = {
   async show(req: Request, res: Response) {
     const { id } = req.params;
     const data = await UserModel.findOne({
-       username: id 
+      username: id,
     }).select(
       '-password -stories -notifications -messages -rememberToken -expiredToken -resetToken'
     );
@@ -27,12 +27,11 @@ export const UsersController = {
 
   async update(req: Request, res: Response) {
     const { id } = req.params;
-    const { username, email } = req.body;
-    const user = await UserModel.findById(id).select('-password');
+    const user = await UserModel.findByIdAndUpdate(id, req.body).select(
+      '-password'
+    );
     if (!user)
       return res.status(400).json({ message: 'Something went wrong!' });
-    user.username = username;
-    user.email = email;
     await user.save();
     return res.status(200).json({ message: 'Update user successfully!' });
   },

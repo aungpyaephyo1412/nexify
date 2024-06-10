@@ -1,8 +1,7 @@
+import NotFound from "@/components/not-found";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import safeFetch from "@/lib/safeFetch";
 import { UserByIdDataSchema } from "@/types/user.types";
-import { Send } from "lucide-react";
 
 const PostProfile = async ({ userName }: { userName: string }) => {
   const { data, error } = await safeFetch(
@@ -15,6 +14,7 @@ const PostProfile = async ({ userName }: { userName: string }) => {
       },
     }
   );
+  if (error) return <NotFound />;
   return (
     <div className="lg:min-w-96 py-4 text-black">
       <div className="flex items-center gap-5 mb-5">
@@ -25,7 +25,10 @@ const PostProfile = async ({ userName }: { userName: string }) => {
             </AvatarFallback>
           </Avatar>
         </div>
-        <h1 className="font-semibold text-lg">{data.data.name}</h1>
+        <div className="space-y-1">
+          <h1 className="font-semibold text-lg">{data.data.name}</h1>
+          <h1 className="text-xs">@{data.data.username}</h1>
+        </div>
       </div>
       <div className="grid grid-cols-3 gap-5 mb-3">
         <div className="flex flex-col justify-center items-center gap-y-1">
@@ -40,13 +43,6 @@ const PostProfile = async ({ userName }: { userName: string }) => {
           <h1 className="font-semibold">{data.data.following.length}</h1>
           <p>following</p>
         </div>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <Button variant={"secondary"}>
-          Message
-          <Send size={15} className="ml-2" />
-        </Button>
-        <Button>Following</Button>
       </div>
     </div>
   );

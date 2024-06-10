@@ -4,6 +4,7 @@ import { UserModel } from '../models/user.service';
 import { createJwt, passwordHash } from '../utils';
 import { faker } from '@faker-js/faker';
 import { message, transporter, verify_registerMessage } from '../utils/mail';
+import { v4 as uuidv4 } from 'uuid';
 
 export const AuthController = {
   async register(req: Request, res: Response) {
@@ -12,7 +13,7 @@ export const AuthController = {
       const rememberToken = faker.number.int({ min: 10000, max: 99999 });
       const email = req.body.email;
       await UserModel.create({
-        username: req.body.username,
+        username: uuidv4(),
         password: hashPassword,
         rememberToken,
         email,

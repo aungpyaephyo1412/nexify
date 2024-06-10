@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-import { v4 as uuidv4 } from 'uuid';
 import { faker } from '@faker-js/faker';
 
 const UserSchema = new Schema(
   {
-    username: { type: String, default: uuidv4(), required: true, unique: true },
-    name: { type: String, default: faker.person.fullName() },
+    username: { type: String, required: true, unique: true },
+    name: { type: String, default: faker.person.zodiacSign() },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     profilePicture: { type: String },

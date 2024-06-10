@@ -3,9 +3,11 @@ import PostCreateForm from "@/components/post-create-form";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Home, Plus, Search, Settings, UserRound } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 const BottomNavigation = () => {
+  const session = useSession({ required: true });
   return (
     <div className="fixed bottom-0 bg-white inset-x-0 block lg:hidden">
       <hr />
@@ -49,11 +51,14 @@ const BottomNavigation = () => {
           <Settings />
         </Button>
         <Button
+          asChild
           variant={"ghost"}
           size={"icon"}
           className="hover:bg-transparent hover:text-slate-600"
         >
-          <UserRound />
+          <Link href={`/${session!.data?.user?.username}`}>
+            <UserRound />
+          </Link>
         </Button>
       </div>
     </div>

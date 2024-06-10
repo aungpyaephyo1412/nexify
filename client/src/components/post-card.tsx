@@ -6,15 +6,27 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { PostData } from "@/types/post.types";
 import { Bookmark, Heart, MessageSquareMore } from "lucide-react";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 
-const PostCard = ({ post }: { post: PostData }) => {
+const PostCard = ({
+  post,
+  className,
+}: {
+  post: PostData;
+  className?: string;
+}) => {
   return (
-    <div className="px-3 lg:px-6 h-auto py-5 flex gap-3 border-b border-b-gray-400">
+    <div
+      className={cn(
+        "px-3 lg:px-6 h-auto py-5 flex gap-3 border-b border-b-gray-400",
+        className
+      )}
+    >
       <div className="flex justify-between items-start">
         <div className="flex gap-2">
           <div className="size-[45px] bg-black rounded relative overflow-hidden">
@@ -53,9 +65,9 @@ const PostCard = ({ post }: { post: PostData }) => {
               </h1>
             </div>
           </div>
-          <PostDialog />
+          <PostDialog postId={post._id} />
         </div>
-        <Link href={"/posts/hello"}>
+        <Link href={`/posts/${post._id}`}>
           {post.caption && <p className="text-sm mb-5 ">{post.caption}</p>}
           {post.imageUrl && (
             <div className="h-[280px] w-full bg-slate-300 mb-5 relative overflow-hidden rounded">
