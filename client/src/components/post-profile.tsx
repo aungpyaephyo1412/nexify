@@ -18,13 +18,9 @@ const PostProfile = async ({ userName }: { userName: string }) => {
   return (
     <div className="lg:min-w-96 py-4 text-black">
       <div className="flex items-center gap-5 mb-5">
-        <div className="size-[45px] rounded bg-gray-950">
-          <Avatar className="size-full rounded-none">
-            <AvatarFallback className="rounded-none">
-              {data.data.name.substring(0, 2)}
-            </AvatarFallback>
-          </Avatar>
-        </div>
+        <Avatar className="size-[45px] border border-gray-500">
+          <AvatarFallback>{data.data.name.substring(0, 2)}</AvatarFallback>
+        </Avatar>
         <div className="space-y-1">
           <h1 className="font-semibold text-lg">{data.data.name}</h1>
           <h1 className="text-xs">@{data.data.username}</h1>

@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-import { faker } from '@faker-js/faker';
 
 const UserSchema = new Schema(
   {
     username: { type: String, required: true, unique: true },
-    name: { type: String, default: faker.person.zodiacSign() },
+    name: { type: String, required: true},
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     profilePicture: { type: String },
@@ -22,6 +21,8 @@ const UserSchema = new Schema(
     isVerified: { type: Boolean, default: false },
     isAdmin: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },
+    gender: { type: String, required: true },
+    dateOfBirth: { type: String },
   },
   { timestamps: true }
 );

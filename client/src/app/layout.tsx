@@ -7,8 +7,8 @@ import "../styles/main.css";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Loopfeed",
-    default: "Loopfeed",
+    template: "%s | Loopfed",
+    default: "Loopfed",
   },
   description:
     "A social media platform where you can connect, share, and engage with others.",
@@ -22,7 +22,11 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={cn(GeistSans.variable, GeistMono.variable, "bg-neutral-300")}
+        className={cn(
+          GeistSans.variable,
+          GeistMono.variable,
+          "bg-neutral-100 antialiased"
+        )}
         suppressHydrationWarning
       >
         <Provider>{children}</Provider>

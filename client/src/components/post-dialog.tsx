@@ -1,5 +1,4 @@
 "use client";
-import { deletePost } from "@/app/(user)/posts/_action";
 import {
   Dialog,
   DialogClose,
@@ -38,10 +37,7 @@ const PostDialog = ({ postId }: { postId: string }) => {
             <hr className="h-[2px] bg-gray-200" />
           </Link>
           <DialogClose asChild>
-            <button
-              onClick={async () => await deletePost(postId)}
-              className="w-full text-center"
-            >
+            <button className="w-full text-center">
               <p className="text-center py-2.5 font-semibold text-sm">Cancel</p>
             </button>
           </DialogClose>

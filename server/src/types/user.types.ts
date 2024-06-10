@@ -1,8 +1,18 @@
 import { z } from 'zod';
 
 export const createUserSchema = z.object({
-  password: z.string().min(6),
-  email: z.string().email().min(1),
+  email: z
+    .string()
+    .email({ message: "Email is invalid" })
+    .min(1, { message: "Email is required" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+  name: z
+    .string()
+    .min(6, { message: "Name must be at least 6 characters" })
+    .max(50, { message: "Name must be 50 characters" }),
+  gender: z.string().min(1, { message: "Gender required" }),
 });
 export const loginUserSchema = z.object({
   identifier: z.string().min(1),
@@ -10,7 +20,7 @@ export const loginUserSchema = z.object({
 });
 export const verifyUserSchema = z.object({
   email: z.string().email().min(1),
-  token: z.string().min(5).max(5),
+  token: z.string().min(9).max(9),
 });
 export const forgotSchema = z.object({
   email: z.string().email().min(1),

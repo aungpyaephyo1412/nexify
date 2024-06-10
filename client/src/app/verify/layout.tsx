@@ -8,16 +8,16 @@ const Layout = async ({ children }: { children: ReactNode }) => {
     redirect("/home");
   }
   return (
-    <div className="bg-neutral-300 w-full min-h-screen grid items-center px-3">
+    <div className="bg-neutral-300 w-full min-h-dvh grid items-center px-3">
       <div className="w-full grid h-full max-w-screen-sm mx-auto gap-9 items-center py-20">
         <div className="space-y-5 self-start">
           <h1 className="text-[35px] lg:text-[65px] font-semibold text-blue-500 text-center lg:text-start">
-            Loopfeed
+            Loopfed
           </h1>
-          <p className="text-sm text-center lg:text-start">
-            Loopfeed helps you connect and share with the people in your life
+          <p className="text-sm text-center lg:text-start mb-8">
+            Loopfed helps you connect and share with the people in your life
           </p>
-          <p className="text-sm text-center lg:text-start">
+          <p className="text-sm text-center lg:text-start text-blue-500 font-semibold">
             You need to verify your email address with your verification code,
             check your email inbox.
           </p>

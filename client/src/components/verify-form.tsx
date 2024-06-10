@@ -11,7 +11,7 @@ import {
 import safeFetch from "@/lib/safeFetch";
 import { RegisterReturnSchema, userVerifySchema } from "@/types/user.types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useSession } from "next-auth/react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -40,7 +40,7 @@ const VerifyForm = ({ email }: { email: string }) => {
               "Content-Type": "application/json",
               Accept: "application/json",
             },
-            body: JSON.stringify({ ...data, email }),
+            body: JSON.stringify({ token: data.token.toString(), email }),
           }
         );
         if (error) {
@@ -58,23 +58,32 @@ const VerifyForm = ({ email }: { email: string }) => {
         await redirectTo("/home");
       })}
     >
+      {errors.root && (
+        <p className="text-sm bg-red-300 border border-gray-500 py-2 text-center px-4">
+          {errors.root.message}
+        </p>
+      )}
       <Controller
         name="token"
         control={control}
-        rules={{ required: true }}
         render={({ field }) => (
           <InputOTP
             {...field}
             className="w-full"
-            maxLength={6}
-            pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+            maxLength={9}
+            minLength={9}
+            pattern={REGEXP_ONLY_DIGITS}
           >
             <InputOTPGroup itemType={"number"} className="w-full">
-              <InputOTPSlot index={0} className="w-full" />
-              <InputOTPSlot index={1} className="w-full" />
-              <InputOTPSlot index={2} className="w-full" />
-              <InputOTPSlot index={3} className="w-full" />
-              <InputOTPSlot index={4} className="w-full" />
+              <InputOTPSlot index={0} className="w-full border-gray-500" />
+              <InputOTPSlot index={1} className="w-full border-gray-500" />
+              <InputOTPSlot index={2} className="w-full border-gray-500" />
+              <InputOTPSlot index={3} className="w-full border-gray-500" />
+              <InputOTPSlot index={4} className="w-full border-gray-500" />
+              <InputOTPSlot index={5} className="w-full border-gray-500" />
+              <InputOTPSlot index={6} className="w-full border-gray-500" />
+              <InputOTPSlot index={7} className="w-full border-gray-500" />
+              <InputOTPSlot index={8} className="w-full border-gray-500" />
             </InputOTPGroup>
           </InputOTP>
         )}

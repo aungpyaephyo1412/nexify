@@ -9,11 +9,13 @@ import { v4 as uuidv4 } from 'uuid';
 export const AuthController = {
   async register(req: Request, res: Response) {
     try {
+      const {name,gender,email} = req.body
       const hashPassword = await passwordHash(req.body.password);
-      const rememberToken = faker.number.int({ min: 10000, max: 99999 });
-      const email = req.body.email;
+      const rememberToken = faker.number.int({ min: 100000000, max: 999999999 });
       await UserModel.create({
         username: uuidv4(),
+        name,
+        gender,
         password: hashPassword,
         rememberToken,
         email,
