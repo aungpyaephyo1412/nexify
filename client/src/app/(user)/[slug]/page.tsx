@@ -3,8 +3,8 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Profile",
 };
-const Page = () => {
-  return <div></div>;
+const Page = async () => {
+  return <div>Posts</div>;
 };
 
 export default Page;

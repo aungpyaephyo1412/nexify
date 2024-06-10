@@ -26,17 +26,19 @@ const ValidationInput = forwardRef<HTMLInputElement, Props>(
               ref={ref}
               className={cn(
                 props.className,
-                "pr-[10px]",
+                "pr-[50px]",
                 isError && "border-red-500"
               )}
             />
-            <button
-              type="button"
-              className="absolute top-[15px] right-[10px]"
-              onClick={() => setOpen((prevState) => !prevState)}
-            >
-              {open ? <Eye size={18} /> : <EyeOff size={18} />}
-            </button>
+            <div className="absolute inset-y-0 py-1 right-1">
+              <button
+                type="button"
+                className="size-full hover:bg-black/10 px-4 py-2 rounded"
+                onClick={() => setOpen((prevState) => !prevState)}
+              >
+                {open ? <Eye size={18} /> : <EyeOff size={18} />}
+              </button>
+            </div>
           </div>
         ) : (
           <Input

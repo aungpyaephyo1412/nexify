@@ -3,13 +3,12 @@ import { login } from "@/app/(auth)/_action";
 import SubmitButton from "@/components/submit-button";
 import { Button } from "@/components/ui/button";
 import ValidationInput from "@/components/validation-input";
-import safeFetch from "@/lib/safeFetch";
-import { RegisterReturnSchema, userAuthSchema } from "@/types/user.types";
+import { userAuthSchema } from "@/types/user.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
-const RegisterForm = () => {
+const LoginForm = () => {
   const {
     register,
     handleSubmit,
@@ -21,30 +20,14 @@ const RegisterForm = () => {
   });
   return (
     <form
-      className="space-y-5 p-5"
       onSubmit={handleSubmit(async (data) => {
-        const { data: d, error } = await safeFetch(
-          RegisterReturnSchema,
-          "/auth/register",
-          {
-            method: "POST",
-            cache: "no-store",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify(data),
-          }
-        );
-        if (error) {
-          setError("root", {
-            message: "Something went wrong!",
-          });
-          return;
+        try {
+          await login({ identifier: data.email, password: data.password });
+        } catch (err) {
+          setError("root", { message: "Email or password does not work!" });
         }
-        reset();
-        await login({ identifier: data.email, password: data.password });
       })}
+      className="space-y-5 p-5"
     >
       <ValidationInput
         isError={!!errors?.email?.message}
@@ -67,22 +50,20 @@ const RegisterForm = () => {
       )}
       <SubmitButton
         className="w-full"
-        name={"Register"}
+        name={"Login"}
         isLoading={isSubmitting}
       />
       <hr />
-      <Button
-        type={"submit"}
-        variant={"outline"}
-        asChild
-        className="w-full relative"
-      >
-        <Link href={"/login"} className="absolute inset-0">
-          Login
-        </Link>
-      </Button>
+      <div className="grid grid-cols-2 gap-5">
+        <Button asChild variant="outline">
+          <Link href={"/forgot-password"}>Forgot Password</Link>
+        </Button>
+        <Button variant={"secondary"} className="w-full" asChild>
+          <Link href={"/register"}>Create New Account</Link>
+        </Button>
+      </div>
     </form>
   );
 };
 
-export default RegisterForm;
+export default LoginForm;

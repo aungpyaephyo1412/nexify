@@ -1,11 +1,13 @@
+"use client";
+import PostCreateForm from "@/components/post-create-form";
 import { Button } from "@/components/ui/button";
-import { PersonIcon } from "@radix-ui/react-icons";
-import { Home, Plus, Search, Settings } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Home, Plus, Search, Settings, UserRound } from "lucide-react";
 import Link from "next/link";
 
 const BottomNavigation = () => {
   return (
-    <div className="fixed bottom-0 bg-black inset-x-0 block lg:hidden">
+    <div className="fixed bottom-0 bg-white inset-x-0 block lg:hidden">
       <hr />
       <div className="py-3 px-3 flex w-full justify-between items-center">
         <Button
@@ -25,13 +27,20 @@ const BottomNavigation = () => {
         >
           <Search />
         </Button>
-        <Button
-          variant={"ghost"}
-          size={"icon"}
-          className="hover:bg-transparent hover:text-slate-600"
-        >
-          <Plus />
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant={"ghost"}
+              size={"icon"}
+              className="hover:bg-transparent hover:text-slate-600"
+            >
+              <Plus />
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <PostCreateForm />
+          </DialogContent>
+        </Dialog>
         <Button
           variant={"ghost"}
           size={"icon"}
@@ -44,7 +53,7 @@ const BottomNavigation = () => {
           size={"icon"}
           className="hover:bg-transparent hover:text-slate-600"
         >
-          <PersonIcon />
+          <UserRound />
         </Button>
       </div>
     </div>

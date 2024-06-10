@@ -1,23 +1,26 @@
+import { auth } from "@/auth";
 import BottomNavigation from "@/components/bottom-navigation";
-import Provider from "@/components/provider";
 import RightNavigation from "@/components/right-navigation";
 import SideNavigation from "@/components/side-navigation";
+import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
-const Layout = ({ children }: { children: ReactNode }) => {
+const Layout = async ({ children }: { children: ReactNode }) => {
+  const session = await auth();
+  if (!session?.user.isVerified) {
+    redirect("/verify");
+  }
   return (
-    <Provider>
-      <main className="flex bg-black text-white">
-        <SideNavigation />
-        <div className="w-full lg:w-auto flex-1">
-          <div className="max-w-screen-sm mx-auto lg:mx-0  px-3 md:px-6 py-5 min-h-screen">
-            {children}
-            <BottomNavigation />
-          </div>
+    <main className="grid lg:grid-cols-8 max-w-screen-xl mx-auto">
+      <SideNavigation />
+      <div className="w-full lg:w-auto col-span-4">
+        <div className="min-h-screen pb-24 ">
+          {children}
+          <BottomNavigation />
         </div>
-        <RightNavigation />
-      </main>
-    </Provider>
+      </div>
+      <RightNavigation />
+    </main>
   );
 };
 

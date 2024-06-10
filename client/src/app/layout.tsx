@@ -1,3 +1,4 @@
+import Provider from "@/components/provider";
 import { cn } from "@/lib/utils";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
@@ -13,15 +14,18 @@ export const metadata: Metadata = {
     "A social media platform where you can connect, share, and engage with others.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={cn(GeistSans.variable, GeistMono.variable)}>
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(GeistSans.variable, GeistMono.variable, "bg-neutral-300")}
+        suppressHydrationWarning
+      >
+        <Provider>{children}</Provider>
       </body>
     </html>
   );
