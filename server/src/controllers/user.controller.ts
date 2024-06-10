@@ -16,7 +16,11 @@ export const UsersController = {
 
   async show(req: Request, res: Response) {
     const { id } = req.params;
-    const data = await UserModel.findById(id);
+    const data = await UserModel.findOne({
+       username: id 
+    }).select(
+      '-password -stories -notifications -messages -rememberToken -expiredToken -resetToken'
+    );
     if (!data) return res.status(404).json({ error: 'User not found!' });
     return res.status(200).json({ data });
   },
