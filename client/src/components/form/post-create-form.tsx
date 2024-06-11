@@ -1,5 +1,6 @@
 "use client";
 import { createPost } from "@/app/(user)/home/_action";
+import { queryClient } from "@/components/query-provider";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { PostCreateSchema } from "@/types/post.types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +20,7 @@ const PostCreateForm = () => {
     resolver: zodResolver(PostCreateSchema),
   });
   return (
-    <div className="px-3 lg:px-6 flex gap-5 border-b border-b-gray-400 pb-5 mb-5">
+    <div className="pt-7 lg:pt-0 px-3 lg:px-6 flex gap-5 border-b border-b-gray-400 pb-5 mb-5">
       <div className="size-[45px] bg-black rounded relative overflow-hidden border border-gray-500">
         <Avatar className="size-full rounded-none">
           <AvatarFallback className="rounded-none">
@@ -32,7 +33,10 @@ const PostCreateForm = () => {
           const res = await createPost(data);
           if (res) {
             reset();
+            await queryClient.invalidateQueries("home-posts");
+            return null;
           }
+          throw new Error("Something went wrong");
         })}
         className="flex-1"
       >

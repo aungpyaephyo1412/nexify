@@ -24,7 +24,6 @@ export const { auth, signIn, signOut, unstable_update, handlers } = NextAuth({
           }
         );
         if (error) return null;
-        console.log("success");
         return {
           id: data.data.id,
           username: data.data.username,

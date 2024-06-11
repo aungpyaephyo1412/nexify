@@ -30,7 +30,7 @@ const VerifyForm = ({ email }: { email: string }) => {
     <form
       className="w-full space-y-5"
       onSubmit={handleSubmit(async (data) => {
-        const { error } = await safeFetch(
+        const { error, data: d } = await safeFetch(
           RegisterReturnSchema,
           "/auth/verify",
           {
@@ -43,19 +43,18 @@ const VerifyForm = ({ email }: { email: string }) => {
             body: JSON.stringify({ token: data.token.toString(), email }),
           }
         );
-        if (error) {
-          setError("root", {
-            message: "Something went wrong!",
+        if (d && error == null) {
+          reset();
+          await session.update({
+            user: {
+              isVerified: true,
+            },
           });
-          return;
+          await redirectTo("/home");
         }
-        reset();
-        await session.update({
-          user: {
-            isVerified: true,
-          },
+        setError("root", {
+          message: "Something went wrong!",
         });
-        await redirectTo("/home");
       })}
     >
       {errors.root && (

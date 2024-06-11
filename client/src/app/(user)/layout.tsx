@@ -14,7 +14,7 @@ const Layout = async ({ children }: { children: ReactNode }) => {
     <main className="grid lg:grid-cols-8 max-w-screen-xl mx-auto min-h-dvh">
       <SideNavigation />
       <div className="w-full lg:w-auto col-span-4">
-        <div className="min-h-dvh pb-24 ">
+        <div className="min-h-dvh pb-44 flex flex-col">
           {children}
           <BottomNavigation />
         </div>

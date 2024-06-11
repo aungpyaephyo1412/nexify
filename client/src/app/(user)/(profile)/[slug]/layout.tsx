@@ -32,7 +32,7 @@ const Layout = async ({
     <div className="w-full h-full">
       <BackNavigation title={data.data.name} />
       <div>
-        <div className="h-[250px] w-full bg-neutral-400"></div>
+        <div className="h-[200px] w-full bg-neutral-400"></div>
         <div className="w-full flex justify-between items-center px-3 lg:px-6 mb-7">
           <div className="size-[100px] lg:size-[150px] rounded-full bg-black -mt-[45px] lg:-mt-[70px] border border-blue-500">
             <Avatar className="size-full rounded-full bg-white">

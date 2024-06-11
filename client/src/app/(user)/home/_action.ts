@@ -36,14 +36,17 @@ export const likePost = async (postId: string) => {
   });
   if (!error) {
     revalidateTag("home-posts");
+    revalidateTag(`post-${postId}`);
     revalidatePath("/home");
+    revalidatePath(`/posts/${postId}`);
   }
+  return data;
 };
 
-export const unlikePost = async (postId: string) => {
+export const unlikePost = async (likeId: string, postId: string) => {
   const { data, error } = await safeFetch(
     RegisterReturnSchema,
-    `/likes/${postId}`,
+    `/likes/${likeId}`,
     {
       method: "DELETE",
       cache: "no-store",
@@ -55,6 +58,9 @@ export const unlikePost = async (postId: string) => {
   );
   if (!error) {
     revalidateTag("home-posts");
+    revalidateTag(`post-${postId}`);
     revalidatePath("/home");
+    revalidatePath(`/posts/${postId}`);
   }
+  return data;
 };
