@@ -6,7 +6,6 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import logger from 'morgan';
 import router from './routes';
-import mongoose from 'mongoose';
 import 'dotenv/config';
 import helmet from 'helmet';
 
@@ -29,9 +28,7 @@ const server = http.createServer(app);
 const port = process.env['PORT'] || '8080';
 server.listen(port, async () => {
   try {
-    await mongoose.connect(process.env['MONGO_URL'] as string);
     console.log(`Server running on http://localhost:${port} ✨`);
-    console.log('Mongo connected 🦄');
   } catch (error) {
     console.log(error);
     process.exit();

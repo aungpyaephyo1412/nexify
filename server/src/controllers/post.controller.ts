@@ -1,58 +1,125 @@
 import { Request, Response } from 'express';
-import { PostModel } from '../models/post.service';
+import { prisma, tryCatch } from '../utils';
 
-export const PostsController = {
-  async index(_: Request, res: Response) {
-    try {
-      const data = await PostModel.find()
-        .populate({
-          path: 'user',
-          select:
-            '-password -notifications -stories -messages -rememberToken -expiredToken -resetToken',
+export const PostController = {
+  async index(req: Request, res: Response) {
+    await tryCatch(async () => {
+      const { page = 1, pageSize = 20, sort, q = '' } = req.query;
+      const data = await prisma.post
+        .paginate({
+          ...(sort && { orderBy: JSON.parse(JSON.stringify(sort, null, 2)) }),
+          where: {
+            ...(q && {
+              OR: [
+                {
+                  caption: {
+                    contains: q.toString(),
+                    mode: 'insensitive', // Default value: default
+                  },
+                },
+              ],
+            }),
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                bio: true,
+                email: true,
+                name: true,
+                username: true,
+                profilePicture: true,
+                gender: true,
+              },
+            },
+            _count: true,
+            Comment: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+            Like: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
         })
-        .sort({
-          createdAt: 'descending',
+        .withPages({
+          limit: +pageSize,
+          page: +page,
+          includePageCount: true,
         });
-      return res.status(200).json({ data });
-    } catch (error) {
-      console.log(error);
-      return res.sendStatus(400);
-    }
-  },
-
-  async show(req: Request, res: Response) {
-    const { id } = req.params;
-    const data = await PostModel.findById(id).populate({
-      path: 'user',
-      select:
-        '-password -notifications -stories -messages -rememberToken -expiredToken -resetToken',
-    });
-    if (!data) return res.status(404).json({ error: 'User not found!' });
-    return res.status(200).json(data);
+      return res.status(200).json({
+        message: 'Users retrieve successfully!',
+        data: data[0],
+        meta: data[1],
+      });
+    }, res);
   },
   async store(req: Request, res: Response) {
-    try {
-      const data = await PostModel.create(req.body);
-      console.log(data);
-      return res.status(201).json({ message: 'Post created' });
-    } catch (e) {
-      console.log(e);
-      return res.status(400).json({ message: 'Something went wrong!' });
-    }
+    await tryCatch(async () => {
+      await prisma.post.create({
+        data: req.body,
+      });
+      return res.status(201).json({ message: 'Post created!' });
+    }, res);
   },
-  async update(req: Request, res: Response) {
+  async show(req: Request, res: Response) {
     const { id } = req.params;
-    const post = await PostModel.findById(id).select('-password');
-    if (!post)
-      return res.status(400).json({ message: 'Something went wrong!' });
-    await post.save();
-    return res.status(200).json({ message: 'Update user successfully!' });
-  },
-
-  async delete(req: Request, res: Response) {
-    const { id } = req.params;
-    const user = await PostModel.findByIdAndDelete(id);
-    if (!user) return res.status(400).json({ message: 'User not found!' });
-    return res.sendStatus(204);
+    await tryCatch(async () => {
+      const data = await prisma.post.findUnique({
+        where: { id },
+        include: {
+          _count: true,
+          Comment: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          Like: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              bio: true,
+              email: true,
+              name: true,
+              username: true,
+              profilePicture: true,
+              gender: true,
+            },
+          },
+        },
+      });
+      return res.status(200).json(data);
+    }, res);
   },
 };
