@@ -1,45 +1,74 @@
 import { Request, Response } from 'express';
-import { CommentModel } from '../models/comment.service';
+import { prisma, tryCatch } from '../utils';
 
-export const CommentsController = {
-  async index(_: Request, res: Response) {
-    try {
-      const data = await CommentModel.find().select(
-        '-password -stories -notifications -messages -rememberToken -expiredToken -resetToken'
-      );
-      return res.status(200).json({ data });
-    } catch (error) {
-      console.log(error);
-      return res.sendStatus(400);
-    }
+export const CommentController = {
+  async index(req: Request, res: Response) {
+    await tryCatch(async () => {
+      const { page = 1, pageSize = 20, sort, q = '', postId } = req.query;
+      const data = await prisma.comment
+        .paginate({
+          ...(sort && { orderBy: JSON.parse(JSON.stringify(sort, null, 2)) }),
+          where: {
+            ...(postId && {
+              postId: {
+                equals: postId.toString(),
+              },
+            }),
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                bio: true,
+                email: true,
+                name: true,
+                username: true,
+                profilePicture: true,
+                gender: true,
+              },
+            },
+          },
+        })
+        .withPages({
+          limit: +pageSize,
+          page: +page,
+          includePageCount: true,
+        });
+      return res.status(200).json({
+        message: 'Users retrieve successfully!',
+        data: data[0],
+        meta: data[1],
+      });
+    }, res);
   },
-
+  async store(req: Request, res: Response) {
+    await tryCatch(async () => {
+      await prisma.comment.create({
+        data: req.body,
+      });
+      return res.status(201).json({ message: 'Post created!' });
+    }, res);
+  },
   async show(req: Request, res: Response) {
     const { id } = req.params;
-    const data = await CommentModel.findOne({
-      username: id,
-    }).select(
-      '-password -stories -notifications -messages -rememberToken -expiredToken -resetToken'
-    );
-    if (!data) return res.status(404).json({ error: 'Comment not found!' });
-    return res.status(200).json({ data });
-  },
-
-  async update(req: Request, res: Response) {
-    const { id } = req.params;
-    const user = await CommentModel.findByIdAndUpdate(id, req.body).select(
-      '-password'
-    );
-    if (!user)
-      return res.status(400).json({ message: 'Something went wrong!' });
-    await user.save();
-    return res.status(200).json({ message: 'Update user successfully!' });
-  },
-
-  async delete(req: Request, res: Response) {
-    const { id } = req.params;
-    const user = await CommentModel.findByIdAndDelete(id);
-    if (!user) return res.status(400).json({ message: 'Comment not found!' });
-    return res.sendStatus(204);
+    await tryCatch(async () => {
+      const data = await prisma.comment.findUnique({
+        where: { id },
+        include: {
+          user: {
+            select: {
+              id: true,
+              bio: true,
+              email: true,
+              name: true,
+              username: true,
+              profilePicture: true,
+              gender: true,
+            },
+          },
+        },
+      });
+      return res.status(200).json(data);
+    }, res);
   },
 };

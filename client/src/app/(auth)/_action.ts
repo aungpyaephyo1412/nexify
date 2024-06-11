@@ -3,7 +3,7 @@
 import { signIn, signOut, unstable_update } from "@/auth";
 import { redirect } from "next/navigation";
 interface LoginSchema {
-  identifier: string;
+  email: string;
   password: string;
 }
 export const login = async (formData: LoginSchema) => {

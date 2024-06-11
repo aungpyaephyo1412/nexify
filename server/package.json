@@ -5,16 +5,20 @@
   "main": "index.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only api",
-    "build": "tsup api/index.ts --format esm --dts --minify --clean --sourcemap",
     "format": "prettier --check --ignore-path .gitignore .",
     "format:fix": "prettier --write --ignore-path .gitignore .",
-    "lint": "eslint . --ext .ts"
+    "migrate": "prisma migrate  dev --name init",
+    "migrate:generate": "prisma generate ",
+    "migrate:push": "prisma db push",
+    "seed": "npx prisma db seed",
+    "build": "prisma generate && prisma db push && tsup api/index.ts --format esm --dts --minify --clean --sourcemap"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
+    "@prisma/client": "^5.15.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
@@ -23,11 +27,12 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.4.1",
     "morgan": "^1.10.0",
+    "node-cache": "^5.1.2",
     "nodemailer": "^6.9.13",
+    "prisma-extension-pagination": "^0.7.4",
     "tsup": "^8.1.0",
-    "uuid": "^9.0.1",
+    "uuid": "^10.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -44,6 +49,7 @@
     "@types/uuid": "^9.0.8",
     "helmet": "^7.1.0",
     "prettier": "^3.3.1",
+    "prisma": "^5.15.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
   }

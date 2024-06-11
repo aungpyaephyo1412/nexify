@@ -24,8 +24,9 @@ export const { auth, signIn, signOut, unstable_update, handlers } = NextAuth({
           }
         );
         if (error) return null;
+        console.log("success");
         return {
-          id: data.data._id,
+          id: data.data.id,
           username: data.data.username,
           name: data.data.name,
           email: data.data.email,
@@ -33,6 +34,9 @@ export const { auth, signIn, signOut, unstable_update, handlers } = NextAuth({
           isAdmin: data.data.isAdmin,
           isBlocked: data.data.isBlocked,
           createdAt: data.data.createdAt,
+          bio: data.data.bio,
+          dateOfBirth: data.data.dateOfBirth,
+          profilePicture: data.data.profilePicture,
           jwt: data.jwt,
         };
       },
@@ -54,6 +58,9 @@ export const { auth, signIn, signOut, unstable_update, handlers } = NextAuth({
           isAdmin: user.isAdmin,
           isBlocked: user.isBlocked,
           createdAt: user.createdAt,
+          bio: user.bio,
+          dateOfBirth: user.dateOfBirth,
+          profilePicture: user.profilePicture,
           jwt: user.jwt,
         } as AuthUser;
 
@@ -72,6 +79,9 @@ export const { auth, signIn, signOut, unstable_update, handlers } = NextAuth({
             isAdmin: token.isAdmin,
             isBlocked: token.isBlocked,
             createdAt: token.createdAt,
+            bio: token.bio,
+            dateOfBirth: token.dateOfBirth,
+            profilePicture: token.profilePicture,
             jwt: token.jwt,
           },
         };

@@ -1,5 +1,5 @@
 import AuthTemplate from "@/components/auth-template";
-import LoginForm from "@/components/login-form";
+import LoginForm from "@/components/form/login-form";
 
 const Page = ({
   searchParams: { message },

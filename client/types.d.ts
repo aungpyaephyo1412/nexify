@@ -15,6 +15,9 @@ declare module "next-auth" {
     isAdmin: boolean;
     isBlocked: boolean;
     createdAt: string;
+    dateOfBirth?: string | null;
+    bio?: string | null;
+    profilePicture?: string | null;
     jwt: string;
   }
   /**
@@ -38,6 +41,9 @@ declare module "@auth/core/jwt" {
     isAdmin: boolean;
     isBlocked: boolean;
     createdAt: string;
+    dateOfBirth?: string | null;
+    bio?: string | null;
+    profilePicture?: string | null;
     jwt: string;
   }
 }

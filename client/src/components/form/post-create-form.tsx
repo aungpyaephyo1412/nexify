@@ -39,6 +39,7 @@ const PostCreateForm = () => {
         <TextareaAutosize
           {...register("caption")}
           maxLength={250}
+          minRows={2}
           className="text-sm outline-none border-b border-b-gray-500 bg-transparent w-full py-3 pr-2 mb-3"
           placeholder={"What is happening?"}
         />

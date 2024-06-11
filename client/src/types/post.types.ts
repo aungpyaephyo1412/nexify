@@ -1,37 +1,55 @@
 import z from "zod";
 
 export const PostUserSchema = z.object({
-  _id: z.string(),
-  username: z.string(),
-  name: z.string(),
-  email: z.string(),
-  followers: z.array(z.any()),
-  following: z.array(z.any()),
-  posts: z.array(z.any()),
-  isVerified: z.boolean(),
-  isAdmin: z.boolean(),
-  isBlocked: z.boolean(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-  __v: z.number(),
+  id: z.string().min(1),
+  bio: z.string().nullish(),
+  email: z.string().email(),
+  name: z.string().min(1),
+  username: z.string().min(1),
+  profilePicture: z.string().nullish(),
+  gender: z.string().min(1),
 });
 export type PostUser = z.infer<typeof PostUserSchema>;
 
 export const PostDataSchema = z.object({
-  _id: z.string(),
+  id: z.string(),
   user: PostUserSchema,
-  caption: z.string().optional(),
-  imageUrl: z.string().optional(),
-  likes: z.array(z.any()),
-  comments: z.array(z.any()),
+  caption: z.string().nullish(),
+  imageUrl: z.string().nullish(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  __v: z.number(),
+  _count: z.object({
+    Like: z.number(),
+    Comment: z.number(),
+  }),
+  Like: z.array(
+    z.object({
+      id: z.string().min(1),
+      postId: z.string().min(1),
+      userId: z.string().min(1),
+      createdAt: z.coerce.date(),
+      updatedAt: z.coerce.date(),
+      user: z.object({
+        id: z.string().min(1),
+        username: z.string().min(1),
+        name: z.string().min(1),
+      }),
+    })
+  ),
 });
 export type PostData = z.infer<typeof PostDataSchema>;
 
 export const PostsSchema = z.object({
   data: z.array(PostDataSchema),
+  meta: z.object({
+    isFirstPage: z.boolean(),
+    isLastPage: z.boolean(),
+    currentPage: z.number().nullish(),
+    previousPage: z.number().nullish(),
+    nextPage: z.number().nullish(),
+    pageCount: z.number().nullish(),
+    totalCount: z.number().nullish(),
+  }),
 });
 export type Posts = z.infer<typeof PostsSchema>;
 

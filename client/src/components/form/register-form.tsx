@@ -51,7 +51,7 @@ const RegisterForm = () => {
           return;
         }
         reset();
-        await login({ identifier: data.email, password: data.password });
+        await login({ email: data.email, password: data.password });
       })}
     >
       <h1 className="text-xl font-semibold text-center">
@@ -105,9 +105,9 @@ const RegisterForm = () => {
                 <SelectValue placeholder="Gender" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
-                <SelectItem value="custom">Custom</SelectItem>
+                <SelectItem value="MALE">Male</SelectItem>
+                <SelectItem value="FEMALE">Female</SelectItem>
+                <SelectItem value="CUSTOM">Custom</SelectItem>
               </SelectContent>
             </Select>
           )}

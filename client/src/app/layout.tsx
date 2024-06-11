@@ -1,10 +1,15 @@
 import Provider from "@/components/provider";
 import { cn } from "@/lib/utils";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
+import "@/styles/main.css";
 import type { Metadata } from "next";
-import "../styles/main.css";
+import { Montserrat } from "next/font/google";
 
+const montserrat = Montserrat({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  fallback: ["Arial", "sans-serif"],
+});
 export const metadata: Metadata = {
   title: {
     template: "%s | Loopfed",
@@ -22,11 +27,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={cn(
-          GeistSans.variable,
-          GeistMono.variable,
-          "bg-neutral-100 antialiased"
-        )}
+        className={cn(montserrat.className, "bg-neutral-100 antialiased")}
         suppressHydrationWarning
       >
         <Provider>{children}</Provider>
