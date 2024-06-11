@@ -1,4 +1,4 @@
-import PostProfileSkeleton from "@/components/fallback-ui/post-profile-skeleton";
+import PostCardFooter from "@/components/post-card-footer";
 import PostDialog from "@/components/post-dialog";
 import PostProfile from "@/components/post-profile";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -9,13 +9,11 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { PostData } from "@/types/post.types";
-import { Bookmark, Heart, MessageSquareMore } from "lucide-react";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
 
-const PostCard = ({
+const PostCard = async ({
   post,
   className,
 }: {
@@ -43,7 +41,7 @@ const PostCard = ({
               <TooltipTrigger asChild>
                 <Link
                   href={`/${post.user.username}`}
-                  className="font-semibold text-lg hover:underline leading-none"
+                  className="font-semibold text-sm hover:underline leading-none"
                 >
                   {post.user.name}
                 </Link>
@@ -54,9 +52,7 @@ const PostCard = ({
                 sideOffset={5}
                 className="shadow-md bg-neutral-200"
               >
-                <Suspense fallback={<PostProfileSkeleton />}>
-                  <PostProfile userName={post.user.username} />
-                </Suspense>
+                <PostProfile userName={post.user.username} />
               </TooltipContent>
             </Tooltip>
             <div className="flex gap-1 font-mono">
@@ -65,9 +61,9 @@ const PostCard = ({
               </h1>
             </div>
           </div>
-          <PostDialog postId={post._id} />
+          <PostDialog postId={post.id} />
         </div>
-        <Link href={`/posts/${post._id}`}>
+        <Link href={`/posts/${post.id}`}>
           {post.caption && <p className="text-sm mb-5 ">{post.caption}</p>}
           {post.imageUrl && (
             <div className="h-[280px] w-full bg-slate-300 mb-5 relative overflow-hidden rounded">
@@ -81,25 +77,7 @@ const PostCard = ({
             </div>
           )}
         </Link>
-        <div className="flex w-full justify-between items-center">
-          <div className="flex gap-5 items-center ">
-            <div className="flex items-center gap-1">
-              <button className="cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center">
-                <Heart size={18} />
-              </button>
-              <span>{post.likes.length}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <button className="cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center">
-                <MessageSquareMore size={18} />
-              </button>
-              <span>{post.comments.length}</span>
-            </div>
-          </div>
-          <button className="cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center">
-            <Bookmark />
-          </button>
-        </div>
+        <PostCardFooter post={post} />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import AuthTemplate from "@/components/auth-template";
-import RegisterForm from "@/components/register-form";
+import RegisterForm from "@/components/form/register-form";
 
 const Page = () => {
   return (

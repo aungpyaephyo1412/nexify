@@ -57,10 +57,10 @@ const Layout = async ({
         </div>
         <div className="w-full flex gap-x-5 items-center px-3 lg:px-6 mb-7">
           <div className="hover:underline text-sm">
-            {data.data.following.length} Following
+            {data.data._count.Following} Following
           </div>
           <div className="hover:underline text-sm">
-            {data.data.followers.length} Followers
+            {data.data._count.Followers} Followers
           </div>
         </div>
         <div className="flex w-full items-center overflow-y-hidden border-b border-b-gray-400 mb-7">

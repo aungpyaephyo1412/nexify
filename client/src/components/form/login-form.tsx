@@ -20,7 +20,7 @@ const LoginForm = () => {
     <form
       onSubmit={handleSubmit(async (data) => {
         try {
-          await login({ identifier: data.identifier, password: data.password });
+          await login({ email: data.email, password: data.password });
         } catch (err) {
           setError("root", { message: "Email or password does not work!" });
         }
@@ -33,12 +33,12 @@ const LoginForm = () => {
         </p>
       )}
       <ValidationInput
-        id="emailOrUsername"
-        title="Email or Username"
-        isError={!!errors?.identifier?.message}
-        errorMessage={errors?.identifier?.message as string}
-        {...register("identifier")}
-        placeholder={"Enter email or username"}
+        id="email"
+        title="Email"
+        isError={!!errors?.email?.message}
+        errorMessage={errors?.email?.message as string}
+        {...register("email")}
+        placeholder={"Enter email "}
         className="border border-gray-500"
       />
       <ValidationInput
