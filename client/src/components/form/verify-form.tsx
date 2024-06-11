@@ -30,7 +30,7 @@ const VerifyForm = ({ email }: { email: string }) => {
     <form
       className="w-full space-y-5"
       onSubmit={handleSubmit(async (data) => {
-        const { error,data : d } = await safeFetch(
+        const { error, data: d } = await safeFetch(
           RegisterReturnSchema,
           "/auth/verify",
           {

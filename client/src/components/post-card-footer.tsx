@@ -1,5 +1,6 @@
 "use client";
 import { likePost, unlikePost } from "@/app/(user)/home/_action";
+import { queryClient } from "@/components/query-provider";
 import { PostData } from "@/types/post.types";
 import { Bookmark, Heart, MessageSquareMore } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -8,20 +9,27 @@ import Link from "next/link";
 const PostCardFooter = ({ post }: { post: PostData }) => {
   const { data } = useSession({ required: true });
   const likeByUser = post.Like.find((p) => p.userId === data?.user?.id);
+
   return (
     <div className="flex w-full justify-between items-center">
       <div className="flex gap-5 items-center ">
         <div className="flex items-center gap-1">
           {likeByUser ? (
             <button
-              onClick={async () => await unlikePost(likeByUser.id)}
+              onClick={async () => {
+                await unlikePost(likeByUser.id, post.id);
+                await queryClient.invalidateQueries("home-posts");
+              }}
               className="cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center"
             >
               <Heart size={15} className="fill-black" />
             </button>
           ) : (
             <button
-              onClick={async () => await likePost(post.id)}
+              onClick={async () => {
+                await likePost(post.id);
+                await queryClient.invalidateQueries("home-posts");
+              }}
               className="cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center"
             >
               <Heart size={15} />

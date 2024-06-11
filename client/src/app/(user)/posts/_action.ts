@@ -39,6 +39,7 @@ export const createComment = async (form: commentForm) => {
   });
   if (error) return null;
   revalidateTag(`comments-${form.postId}`);
+  revalidateTag(`post-${form.postId}`);
   revalidatePath("/home");
   return data;
 };

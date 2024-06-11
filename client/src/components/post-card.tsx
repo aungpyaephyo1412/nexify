@@ -1,19 +1,14 @@
+"use client";
 import PostCardFooter from "@/components/post-card-footer";
 import PostDialog from "@/components/post-dialog";
-import PostProfile from "@/components/post-profile";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { PostData } from "@/types/post.types";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 
-const PostCard = async ({
+const PostCard = ({
   post,
   className,
 }: {
@@ -37,24 +32,12 @@ const PostCard = async ({
       <div className="flex-1">
         <div className="w-full flex justify-between items-start mb-3">
           <div className="space-y-1">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href={`/${post.user.username}`}
-                  className="font-semibold text-sm hover:underline leading-none"
-                >
-                  {post.user.name}
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent
-                align={"start"}
-                side={"bottom"}
-                sideOffset={5}
-                className="shadow-md bg-neutral-200"
-              >
-                <PostProfile userName={post.user.username} />
-              </TooltipContent>
-            </Tooltip>
+            <Link
+              href={`/${post.user.username}`}
+              className="font-semibold text-sm hover:underline leading-none"
+            >
+              {post.user.name}
+            </Link>
             <div className="flex gap-1 font-mono">
               <h1 className="text-xs">
                 {moment(post.createdAt, "YYYYMMDD").fromNow()}

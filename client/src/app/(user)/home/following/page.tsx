@@ -1,5 +1,5 @@
 const Page = () => {
-  return <div>following</div>;
+  return <div className="w-full flex-1">following</div>;
 };
 
 export default Page;

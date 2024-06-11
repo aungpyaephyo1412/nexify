@@ -6,7 +6,7 @@ import { PostsSchema } from "@/types/comment.types";
 const Comments = async ({ postId }: { postId: string }) => {
   const { data, error } = await safeFetch(
     PostsSchema,
-    "/comments?sort[createdAt]=desc",
+    `/comments?sort[createdAt]=desc&postId=${postId}`,
     {
       next: {
         tags: [`comments-${postId}`],
