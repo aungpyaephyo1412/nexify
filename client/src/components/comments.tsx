@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import CommentDropdown from "@/components/comment-dropdown";
 import NotFound from "@/components/not-found";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -7,6 +6,7 @@ import { fullImagePath } from "@/lib/utils";
 import { PostsSchema } from "@/types/comment.types";
 import { BadgeCheck } from "lucide-react";
 import Link from "next/link";
+import { auth } from "../../auth";
 
 const Comments = async ({
   postId,

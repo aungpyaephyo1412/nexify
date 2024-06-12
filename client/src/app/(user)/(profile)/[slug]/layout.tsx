@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import BackNavigation from "@/components/back-navigation";
 import EditProfileDialog from "@/components/edit-profile-dialog";
 import NavButton from "@/components/nav-button";
@@ -10,6 +9,7 @@ import { UserByIdDataSchema } from "@/types/user.types";
 import { BadgeCheck, Calendar } from "lucide-react";
 import moment from "moment";
 import { ReactNode } from "react";
+import { auth } from "../../../../../auth";
 
 const Layout = async ({
   children,

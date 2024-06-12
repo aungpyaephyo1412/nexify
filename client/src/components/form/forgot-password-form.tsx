@@ -1,4 +1,5 @@
 "use client";
+import { setCookie } from "@/app/(auth)/_action";
 import { redirectTo } from "@/app/verify/_action";
 import SubmitButton from "@/components/submit-button";
 import ValidationInput from "@/components/validation-input";
@@ -56,6 +57,7 @@ const LoginForm = () => {
           return;
         }
         reset();
+        await setCookie("forgot-mail", JSON.stringify({ email: data.email }));
         await redirectTo("/forgot-password?message=Check your email");
       })}
       className="space-y-5 p-5"

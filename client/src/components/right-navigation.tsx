@@ -1,8 +1,8 @@
-import { auth } from "@/auth";
 import LogOut from "@/components/log-out";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Ellipsis } from "lucide-react";
 import Link from "next/link";
+import { auth } from "../../auth";
 
 const RightNavigation = async () => {
   const session = await auth();
