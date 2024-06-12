@@ -46,6 +46,8 @@ export const UsersController = {
         username: id.toString(),
       },
       include: {
+        Followers: true,
+        Following: true,
         _count: true,
       },
     });

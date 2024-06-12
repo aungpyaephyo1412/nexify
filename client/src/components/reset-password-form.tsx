@@ -17,7 +17,6 @@ const ResetPasswordForm = () => {
     resolver: zodResolver(userResetPasswordSchema),
   });
   const { slug } = useParams();
-  console.log(slug);
   return (
     <form
       onSubmit={handleSubmit(async (data) => {

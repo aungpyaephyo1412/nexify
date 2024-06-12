@@ -1,5 +1,6 @@
 import LogOut from "@/components/log-out";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { fullImagePath } from "@/lib/utils";
 import { Ellipsis } from "lucide-react";
 import Link from "next/link";
 import { auth } from "../../auth";
@@ -13,9 +14,12 @@ const RightNavigation = async () => {
         className="w-full flex justify-between items-center gap-5"
       >
         <div className="flex-1 w-full flex gap-2 items-center">
-          <Avatar className="size-[50px] rounded-full bg-white">
-            <AvatarFallback>
-              {session?.user?.name?.substring(0, 2)}
+          <Avatar className="size-[50px] rounded-full border border-gray-500">
+            {session?.user.profilePicture && (
+              <AvatarImage src={fullImagePath(session?.user.profilePicture)} />
+            )}
+            <AvatarFallback className="rounded-none">
+              {session?.user?.name?.substring(0, 2) || "User"}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 fspace-y-1 w-fit">
