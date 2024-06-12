@@ -1,5 +1,5 @@
-import { auth } from "@/auth";
 import VerifyForm from "@/components/form/verify-form";
+import { auth } from "../../../auth";
 
 export const metadata = {
   title: "Verify Account",

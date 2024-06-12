@@ -5,6 +5,7 @@ import ValidationInput from "@/components/validation-input";
 import { userLoginSchema } from "@/types/user.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 const LoginForm = () => {
@@ -16,6 +17,8 @@ const LoginForm = () => {
   } = useForm({
     resolver: zodResolver(userLoginSchema),
   });
+  const searchParams = useSearchParams();
+  const message = searchParams.get("message");
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
@@ -27,6 +30,11 @@ const LoginForm = () => {
       })}
       className="space-y-5 p-5"
     >
+      {message && (
+        <p className="text-sm bg-green-300 border border-gray-500 py-2 text-center px-4">
+          {message}
+        </p>
+      )}
       {errors.root && (
         <p className="text-sm bg-red-300 border border-gray-500 py-2 text-center px-4">
           {errors.root.message}

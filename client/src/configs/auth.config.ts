@@ -19,6 +19,7 @@ export const authConfig = {
       } else {
         return (
           nextUrl.pathname.startsWith("/forgot-password") ||
+          nextUrl.pathname.startsWith("/reset-password") ||
           nextUrl.pathname === "/register"
         );
       }

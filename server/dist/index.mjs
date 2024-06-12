@@ -61,13 +61,11 @@ var P = {
             },
           })
           .withPages({ limit: +s, page: +r, includePageCount: !0 });
-      return t
-        .status(200)
-        .json({
-          message: 'Users retrieve successfully!',
-          data: c[0],
-          meta: c[1],
-        });
+      return t.status(200).json({
+        message: 'Users retrieve successfully!',
+        data: c[0],
+        meta: c[1],
+      });
     }, t);
   },
   async show(e, t) {
@@ -347,13 +345,11 @@ var O = {
             },
           })
           .withPages({ limit: +s, page: +r, includePageCount: !0 });
-      return t
-        .status(200)
-        .json({
-          message: 'Users retrieve successfully!',
-          data: c[0],
-          meta: c[1],
-        });
+      return t.status(200).json({
+        message: 'Users retrieve successfully!',
+        data: c[0],
+        meta: c[1],
+      });
     }, t);
   },
   async store(e, t) {
@@ -453,13 +449,11 @@ var U = {
             },
           })
           .withPages({ limit: +s, page: +r, includePageCount: !0 });
-      return t
-        .status(200)
-        .json({
-          message: 'Users retrieve successfully!',
-          data: a[0],
-          meta: a[1],
-        });
+      return t.status(200).json({
+        message: 'Users retrieve successfully!',
+        data: a[0],
+        meta: a[1],
+      });
     }, t);
   },
   async store(e, t) {

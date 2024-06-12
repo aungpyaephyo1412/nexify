@@ -1,9 +1,9 @@
-import { auth } from "@/auth";
 import BottomNavigation from "@/components/bottom-navigation";
 import RightNavigation from "@/components/right-navigation";
 import SideNavigation from "@/components/side-navigation";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
+import { auth } from "../../../auth";
 
 const Layout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();

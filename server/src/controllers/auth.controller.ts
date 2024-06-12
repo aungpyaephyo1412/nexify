@@ -55,6 +55,32 @@ export const AuthController = {
       return res.status(400).send({ message: 'Something went wrong!' });
     }
   },
+  async checkExitToken(req: Request, res: Response) {
+    try {
+      const { token } = req.params;
+      const user = await prisma.user.findFirst({
+        where: {
+          AND: [
+            {
+              resetToken: {
+                equals: token.toString(),
+              },
+            },
+            {
+              expiredToken: {
+                gte: new Date(Date.now()),
+              },
+            },
+          ],
+        },
+      });
+      if (!user) return res.status(404).json({ error: 'User not found!' });
+      return res.status(200).send({ message: 'Valid token!' });
+    } catch (e) {
+      console.log(e);
+      return res.status(400).send({ message: 'Something went wrong!' });
+    }
+  },
   async login(req: Request, res: Response) {
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({
@@ -107,7 +133,7 @@ export const AuthController = {
         },
         data: {
           resetToken: token,
-          expiredToken: new Date(Date.now() + 60 * 60 * 10),
+          expiredToken: new Date(Date.now() + 60 * 60 * 1000),
         },
       });
       return res.status(201).json({
@@ -120,14 +146,18 @@ export const AuthController = {
   },
   async resetPassword(req: Request, res: Response) {
     try {
-      const newPassword = req.body.password;
-      const sentToken = req.body.token;
+      const { email, token, newPassword } = req.body;
       const user = await prisma.user.findFirst({
         where: {
           AND: [
             {
+              email: {
+                equals: email,
+              },
+            },
+            {
               resetToken: {
-                equals: sentToken.toString(),
+                equals: token.toString(),
               },
             },
             {
@@ -143,6 +173,7 @@ export const AuthController = {
           error: 'User not found',
         });
       }
+      const password = await passwordHash(newPassword);
       await prisma.user.update({
         where: {
           id: user.id,
@@ -150,7 +181,7 @@ export const AuthController = {
         data: {
           resetToken: null,
           expiredToken: null,
-          password: await passwordHash(newPassword),
+          password,
         },
       });
       return res.status(200).json({

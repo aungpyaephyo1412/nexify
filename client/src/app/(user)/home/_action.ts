@@ -1,10 +1,10 @@
 "use server";
 
-import { auth } from "@/auth";
 import safeFetch from "@/lib/safeFetch";
 import { PostCreateReturnSchema } from "@/types/post.types";
 import { RegisterReturnSchema } from "@/types/user.types";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { auth } from "../../../../auth";
 
 export const revaildate = async (tag: string) => revalidateTag(tag);
 export const revaildateP = async (tag: string) => revalidatePath(tag);

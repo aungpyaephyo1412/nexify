@@ -20,6 +20,7 @@ export default (router: express.Router) => {
     validator(verifyUserSchema),
     AuthController.verify
   );
+  router.get('/auth/verify/:token', AuthController.checkExitToken);
   router.post(
     '/auth/forgot-password',
     validator(forgotSchema),
