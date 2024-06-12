@@ -71,4 +71,14 @@ export const CommentController = {
       return res.status(200).json(data);
     }, res);
   },
+  async delete(req: Request, res: Response) {
+    const { id } = req.params;
+    await tryCatch(async () => {
+      const data = await prisma.comment.delete({
+        where: { id },
+      });
+      if (!data) return res.status(404).json({ message: 'comment not found!' });
+      return res.status(200).json({ message: 'Delete comment' });
+    }, res);
+  },
 };

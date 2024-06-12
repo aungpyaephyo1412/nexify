@@ -56,7 +56,7 @@ const PostCard = ({
           {post.imageUrl && (
             <div className="h-[280px] w-full bg-slate-300 mb-5 relative overflow-hidden rounded">
               <Image
-                src={"/hello.jpeg"}
+                src={fullImagePath(post.imageUrl)}
                 alt={"image"}
                 fill
                 priority

@@ -6,11 +6,11 @@ export const commentCreateSchema = z.object({
 
 export const CommentUserSchema = z.object({
   id: z.string(),
-  bio: z.null(),
+  bio: z.string().nullish(),
   email: z.string(),
   name: z.string(),
   username: z.string(),
-  profilePicture: z.null(),
+  profilePicture: z.string().nullish(),
   gender: z.string(),
 });
 export type CommentUser = z.infer<typeof CommentUserSchema>;

@@ -30,7 +30,6 @@ const Layout = async ({
     }
   );
   if (error) return <NotFound />;
-  console.log(data.data.profilePicture);
   return (
     <div className="w-full h-full">
       <BackNavigation title={data.data.name} />

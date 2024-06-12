@@ -36,7 +36,7 @@ const PostCreateForm = ({ postId }: { postId: string }) => {
           {...register("caption")}
           maxLength={250}
           minRows={2}
-          className="text-sm outline-none border-b border-b-gray-500 bg-transparent w-full py-3 pr-2 mb-3"
+          className="resize-none text-sm outline-none border-b border-b-gray-500 bg-transparent w-full py-3 pr-2 mb-3"
           placeholder={"Write your comment"}
         />
         <div className="w-full flex justify-end items-center">

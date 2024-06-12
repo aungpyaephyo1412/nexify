@@ -42,7 +42,6 @@ const EditProfileDialog = ({ data: user }: { data: userByIdData }) => {
   const image = watch("image");
   useEffect(() => {
     if (image) {
-      console.log(image);
       image.length > 0 && setImageUrl(URL.createObjectURL(image[0]));
     }
   }, [image]);

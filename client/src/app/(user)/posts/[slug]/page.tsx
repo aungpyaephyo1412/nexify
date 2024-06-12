@@ -17,7 +17,7 @@ const Page = async ({ params: { slug } }: { params: { slug: string } }) => {
     <>
       <PostCard post={data} />
       <CommentForm postId={slug} />
-      <Comments postId={slug} />
+      <Comments postId={slug} ownerId={data.userId} />
     </>
   );
 };
