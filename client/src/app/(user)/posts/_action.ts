@@ -43,3 +43,19 @@ export const createComment = async (form: commentForm) => {
   revalidatePath("/home");
   return data;
 };
+
+export const deleteComment = async (id: string, postId: string) => {
+  const { data, error } = await safeFetch(
+    RegisterReturnSchema,
+    `/comments/${id}`,
+    {
+      method: "DELETE",
+      cache: "no-store",
+    }
+  );
+  if (error) return null;
+  revalidateTag(`comments-${postId}`);
+  revalidateTag(`post-${postId}`);
+  revalidatePath("/home");
+  return data;
+};

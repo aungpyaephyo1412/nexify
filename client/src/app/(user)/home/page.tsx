@@ -11,7 +11,7 @@ const Page = () => {
   const fetchPosts = async ({ pageParam = 1 }) => {
     const { data } = await safeFetch(
       PostsSchema,
-      `/posts?sort[createdAt]=desc&page=${pageParam}`,
+      `/posts?sort[createdAt]=desc&sort[Like[_count]]=desc&page=${pageParam}`,
       {
         cache: "no-store",
       }
