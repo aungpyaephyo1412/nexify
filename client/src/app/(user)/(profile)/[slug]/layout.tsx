@@ -46,8 +46,12 @@ const Layout = async ({
               </AvatarFallback>
             </Avatar>
           </div>
-          {session?.user.username === slug && (
+          {session?.user.username === slug ? (
             <EditProfileDialog data={data.data} />
+          ) : (
+            <button className="border border-gray-500 px-4 py-2 rounded-full text-sm">
+              Follow
+            </button>
           )}
         </div>
         <div className="px-3 lg:px-6 space-y-5 mb-5">
@@ -68,10 +72,10 @@ const Layout = async ({
         </div>
         <div className="w-full flex gap-x-5 items-center px-3 lg:px-6 mb-7">
           <div className="hover:underline text-sm">
-            {data.data._count.Following} Following
+            {data.data._count.Followers} Following
           </div>
           <div className="hover:underline text-sm">
-            {data.data._count.Followers} Followers
+            {data.data._count.Following} Followers
           </div>
         </div>
         <div className="flex w-full items-center overflow-y-hidden border-b border-b-gray-400 mb-7">

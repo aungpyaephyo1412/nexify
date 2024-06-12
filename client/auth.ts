@@ -46,28 +46,27 @@ export const { auth, signIn, signOut, unstable_update, handlers } = NextAuth({
       if (trigger === "update") {
         return {
           ...token,
-          isVerified: session.user.isVerified,
-          profilePicture: session.user.profilePicture,
-          name: session.user.name,
-          bio: session.user.bio,
+          ...session.user,
         };
       }
-      if (user)
-        return {
-          ...token,
-          id: user.id,
-          username: user.username,
-          name: user.name,
-          email: user.email,
-          isVerified: user.isVerified,
-          isAdmin: user.isAdmin,
-          isBlocked: user.isBlocked,
-          createdAt: user.createdAt,
-          bio: user.bio,
-          dateOfBirth: user.dateOfBirth,
-          profilePicture: user.profilePicture,
-          jwt: user.jwt,
-        } as AuthUser;
+      if (trigger === "signIn") {
+        if (user)
+          return {
+            ...token,
+            id: user.id,
+            username: user.username,
+            name: user.name,
+            email: user.email,
+            isVerified: user.isVerified,
+            isAdmin: user.isAdmin,
+            isBlocked: user.isBlocked,
+            createdAt: user.createdAt,
+            bio: user.bio,
+            dateOfBirth: user.dateOfBirth,
+            profilePicture: user.profilePicture,
+            jwt: user.jwt,
+          } as AuthUser;
+      }
 
       return token;
     },

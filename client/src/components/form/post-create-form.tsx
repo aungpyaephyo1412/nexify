@@ -45,8 +45,7 @@ const PostCreateForm = () => {
       </div>
       <form
         onSubmit={handleSubmit(async (data) => {
-          if (!data.caption && data.image && data.image.length === 0)
-            return null;
+          if (!data.caption && data.image.length === 0) return null;
           let supabaseUrl;
           if (data.image && data.image.length > 0) {
             const file = data.image[0];
@@ -119,7 +118,10 @@ const PostCreateForm = () => {
               </button>
             )}
           </div>
-          <button className="text-xs px-8 py-2 rounded-full text-white bg-blue-500">
+          <button
+            disabled={isSubmitting}
+            className="text-xs px-8 py-2 rounded-full text-white bg-blue-500"
+          >
             {isSubmitting ? (
               <Loader2 size={15} className="text-white animate-spin" />
             ) : (

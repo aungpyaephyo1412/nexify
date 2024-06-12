@@ -4,6 +4,7 @@ import auth from './auth.routes';
 import posts from './post.routes';
 import likes from './like.routes';
 import comments from './comment.routes';
+import follows from './follow.routes';
 
 const router = Router();
 export default (): Router => {
@@ -12,5 +13,6 @@ export default (): Router => {
   posts(router);
   likes(router);
   comments(router);
+  follows(router);
   return router;
 };
