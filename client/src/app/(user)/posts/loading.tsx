@@ -1,20 +1,9 @@
+import LoadingCircle from "@/components/loading-circle";
+
 const Loading = () => {
   return (
-    <div className="flex-1 w-full flex justify-center items-center">
-      <div className="lds-spinner inline-block">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
+    <div className="flex-1 min-h-[50dvh] w-full flex justify-center items-center">
+      <LoadingCircle />
     </div>
   );
 };

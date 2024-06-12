@@ -6,6 +6,9 @@ import { PostCreateReturnSchema } from "@/types/post.types";
 import { RegisterReturnSchema } from "@/types/user.types";
 import { revalidatePath, revalidateTag } from "next/cache";
 
+export const revaildate = async (tag: string) => revalidateTag(tag);
+export const revaildateP = async (tag: string) => revalidatePath(tag);
+
 export const createPost = async (formData: {}) => {
   const session = await auth();
   const { data, error } = await safeFetch(PostCreateReturnSchema, "/posts", {

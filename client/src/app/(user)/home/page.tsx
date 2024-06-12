@@ -4,6 +4,7 @@ import LoadingCircle from "@/components/loading-circle";
 import PostLists from "@/components/post-lists";
 import safeFetch from "@/lib/safeFetch";
 import { PostsSchema } from "@/types/post.types";
+import { InView } from "react-intersection-observer";
 import { useInfiniteQuery } from "react-query";
 
 const Page = () => {
@@ -18,21 +19,13 @@ const Page = () => {
     return data;
   };
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isLoading,
-    isFetching,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ["home-posts"],
-    queryFn: async ({ pageParam }) => await fetchPosts({ pageParam }),
-    getNextPageParam: (lastPage, pages) =>
-      lastPage.meta.nextPage || lastPage.meta.currentPage,
-  });
+  const { data, fetchNextPage, isLoading, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ["home-posts"],
+      queryFn: async ({ pageParam }) => await fetchPosts({ pageParam }),
+      getNextPageParam: (lastPage) =>
+        lastPage.meta.nextPage || lastPage.meta.currentPage,
+    });
   if (isLoading) return <Loading />;
   return (
     <div className="space-y-5">
@@ -44,12 +37,10 @@ const Page = () => {
         {!isLoading &&
           !isFetchingNextPage &&
           !data?.pages[data?.pages.length - 1].meta.isLastPage && (
-            <button
-              onClick={() => fetchNextPage()}
-              className="w-full bg-black/10 py-2"
-            >
-              show more
-            </button>
+            <InView
+              as="div"
+              onChange={async (inView) => inView && (await fetchNextPage())}
+            ></InView>
           )}
       </div>
     </div>

@@ -1,8 +1,8 @@
 "use client";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 
 const Session = () => {
-  const session = useSession({ required: true });
+  // const session = useSession({ required: true });
   return <></>;
 };
 

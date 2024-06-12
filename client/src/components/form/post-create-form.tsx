@@ -1,7 +1,8 @@
 "use client";
 import { createPost } from "@/app/(user)/home/_action";
 import { queryClient } from "@/components/query-provider";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { fullImagePath } from "@/lib/utils";
 import { PostCreateSchema } from "@/types/post.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Image as Img, Loader2 } from "lucide-react";
@@ -23,6 +24,11 @@ const PostCreateForm = () => {
     <div className="pt-7 lg:pt-0 px-3 lg:px-6 flex gap-5 border-b border-b-gray-400 pb-5 mb-5">
       <div className="size-[45px] bg-black rounded relative overflow-hidden border border-gray-500">
         <Avatar className="size-full rounded-none">
+          {session.data?.user.profilePicture && (
+            <AvatarImage
+              src={fullImagePath(session.data?.user.profilePicture)}
+            />
+          )}
           <AvatarFallback className="rounded-none">
             {session?.data?.user.name.substring(0, 2)}
           </AvatarFallback>
