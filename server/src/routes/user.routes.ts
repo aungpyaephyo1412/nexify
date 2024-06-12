@@ -6,5 +6,5 @@ export default (router: express.Router) => {
   router.get('/users', UsersController.index);
   router.get('/users/:id', UsersController.show);
   router.delete('/users/:id', verifyUserToken, UsersController.delete);
-  router.put('/users/:id', verifyUserToken, UsersController.update);
+  router.put('/users/:id', UsersController.update);
 };

@@ -44,7 +44,13 @@ export const { auth, signIn, signOut, unstable_update, handlers } = NextAuth({
   callbacks: {
     async jwt({ token, user, session, trigger }) {
       if (trigger === "update") {
-        return { ...token, isVerified: session.user.isVerified };
+        return {
+          ...token,
+          isVerified: session.user.isVerified,
+          profilePicture: session.user.profilePicture,
+          name: session.user.name,
+          bio: session.user.bio,
+        };
       }
       if (user)
         return {

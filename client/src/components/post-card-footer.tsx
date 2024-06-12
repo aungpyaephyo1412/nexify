@@ -9,7 +9,6 @@ import Link from "next/link";
 const PostCardFooter = ({ post }: { post: PostData }) => {
   const { data } = useSession({ required: true });
   const likeByUser = post.Like.find((p) => p.userId === data?.user?.id);
-
   return (
     <div className="flex w-full justify-between items-center">
       <div className="flex gap-5 items-center ">

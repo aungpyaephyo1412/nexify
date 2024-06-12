@@ -1,11 +1,13 @@
 import { auth } from "@/auth";
 import BackNavigation from "@/components/back-navigation";
+import EditProfileDialog from "@/components/edit-profile-dialog";
 import NavButton from "@/components/nav-button";
 import NotFound from "@/components/not-found";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import safeFetch from "@/lib/safeFetch";
+import { fullImagePath } from "@/lib/utils";
 import { UserByIdDataSchema } from "@/types/user.types";
-import { Calendar } from "lucide-react";
+import { BadgeCheck, Calendar } from "lucide-react";
 import moment from "moment";
 import { ReactNode } from "react";
 
@@ -28,6 +30,7 @@ const Layout = async ({
     }
   );
   if (error) return <NotFound />;
+  console.log(data.data.profilePicture);
   return (
     <div className="w-full h-full">
       <BackNavigation title={data.data.name} />
@@ -36,20 +39,29 @@ const Layout = async ({
         <div className="w-full flex justify-between items-center px-3 lg:px-6 mb-7">
           <div className="size-[100px] lg:size-[150px] rounded-full bg-black -mt-[45px] lg:-mt-[70px] border border-blue-500">
             <Avatar className="size-full rounded-full bg-white">
+              {data.data.profilePicture && (
+                <AvatarImage src={fullImagePath(data.data.profilePicture)} />
+              )}
               <AvatarFallback>
                 {session?.user?.name?.substring(0, 2)}
               </AvatarFallback>
             </Avatar>
           </div>
           {session?.user.username === slug && (
-            <button className="border border-gray-500 px-4 py-2 rounded-full text-sm">
-              Edit Profile
-            </button>
+            <EditProfileDialog data={data.data} />
           )}
         </div>
-        <div className="px-3 lg:px-6 space-y-3 mb-5">
-          <h1 className="text-lg font-semibold">{data.data.name}</h1>
-          <p className="text-sm text-gray-600">@{data.data.username}</p>
+        <div className="px-3 lg:px-6 space-y-5 mb-5">
+          <div className="space-y-1">
+            <h1 className="text-lg font-semibold flex items-center gap-x-1">
+              {data.data.name}{" "}
+              <BadgeCheck size={16} className="text-blue-500" />
+            </h1>
+            <p className="text-sm text-gray-600">@{data.data.username}</p>
+          </div>
+          {data.data.bio && (
+            <p className="text-sm text-gray-600"> {data.data.bio}</p>
+          )}
           <p className="flex items-center gap-x-2 text-sm">
             <Calendar size={15} /> Joined at{" "}
             {moment(data.data.createdAt).format("ll")}

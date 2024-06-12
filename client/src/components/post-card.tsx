@@ -1,9 +1,10 @@
 "use client";
 import PostCardFooter from "@/components/post-card-footer";
 import PostDialog from "@/components/post-dialog";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn, fullImagePath } from "@/lib/utils";
 import { PostData } from "@/types/post.types";
+import { BadgeCheck } from "lucide-react";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,6 +26,9 @@ const PostCard = ({
       <div className="flex justify-between items-start">
         <div className="flex gap-2">
           <Avatar className="size-[45px] border border-gray-500">
+            {post.user.profilePicture && (
+              <AvatarImage src={fullImagePath(post.user.profilePicture)} />
+            )}
             <AvatarFallback>{post.user.name.substring(0, 2)}</AvatarFallback>
           </Avatar>
         </div>
@@ -34,9 +38,10 @@ const PostCard = ({
           <div className="space-y-1">
             <Link
               href={`/${post.user.username}`}
-              className="font-semibold text-sm hover:underline leading-none"
+              className="font-semibold text-sm hover:underline leading-none flex items-center gap-x-2"
             >
-              {post.user.name}
+              {post.user.name}{" "}
+              <BadgeCheck size={14} className="text-blue-500" />
             </Link>
             <div className="flex gap-1 font-mono">
               <h1 className="text-xs">

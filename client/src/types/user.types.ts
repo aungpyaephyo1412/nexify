@@ -84,3 +84,23 @@ export type UserByIdData = z.infer<typeof UserByIdDataSchema>;
 export const forgotPasswordSchema = z.object({
   email: z.string().email().min(1),
 });
+
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+
+export const userUpdateSchema = z.object({
+  name: z.string().min(6),
+  bio: z.string(),
+  image: z
+    .any()
+    .refine((file) => {
+      return file && file.length > 0 ? file[0].size <= MAX_FILE_SIZE : true;
+    }, `Max image size is 5MB.`)
+    .refine(
+      (file) =>
+        file && file.length > 0
+          ? ACCEPTED_IMAGE_TYPES.includes(file[0].type)
+          : true,
+      "Only .jpg, .jpeg, .png and .webp formats are supported."
+    ),
+});
