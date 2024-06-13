@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
 import { isEmptyObj, prisma, tryCatch } from '../utils';
+import { stringToObject } from '../helpers';
+import { USER_BY_ID_DTO, USER_DTO } from '../helpers/user.helper';
 export const UsersController = {
   async index(req: Request, res: Response) {
     await tryCatch(async () => {
-      const { page = 1, pageSize = 20, sort, q = '' } = req.query;
+      const { page = 1, pageSize = 20, sort, q } = req.query;
       const data = await prisma.user
         .paginate({
-          ...(sort && { orderBy: JSON.parse(JSON.stringify(sort, null, 2)) }),
+          ...(sort && { orderBy: stringToObject(sort as string) }),
           where: {
             ...(q && {
               OR: [
@@ -25,6 +27,7 @@ export const UsersController = {
               ],
             }),
           },
+          select: USER_DTO,
         })
         .withPages({
           limit: +pageSize,
@@ -41,22 +44,23 @@ export const UsersController = {
 
   async show(req: Request, res: Response) {
     const { id } = req.params;
-    const data = await prisma.user.findUnique({
+    const data = await prisma.user.findFirst({
       where: {
-        username: id.toString(),
+        OR: [
+          {
+            username: id,
+          },
+          {
+            id,
+          },
+        ],
       },
-      include: {
-        Followers: true,
-        Following: true,
-        _count: true,
-      },
+      select: USER_BY_ID_DTO,
     });
     if (!data) return res.status(404).json({ error: 'User not found!' });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...user } = data;
     return res.status(200).json({
       message: 'User retrieve successfully!',
-      data: user,
+      data,
     });
   },
 
@@ -67,7 +71,7 @@ export const UsersController = {
     }
     await tryCatch(async () => {
       await prisma.user.update({
-        where: { id: id.toString() },
+        where: { id },
         data: req.body,
       });
       return res.status(200).json({ message: 'Update user successfully!' });
@@ -79,11 +83,10 @@ export const UsersController = {
     await tryCatch(async () => {
       await prisma.user.delete({
         where: {
-          id: id.toString(),
+          id,
         },
       });
-      return res.sendStatus(204);
+      return res.status(200).json({ message: 'Delete user!' });
     }, res);
   },
 };
-export default UsersController;

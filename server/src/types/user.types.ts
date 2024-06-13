@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const createUserSchema = z.object({
+export const CREATE_USER_SCHEMA = z.object({
   email: z
     .string()
     .email({ message: 'Email is invalid' })
@@ -12,22 +12,36 @@ export const createUserSchema = z.object({
     .string()
     .min(1, { message: 'Name must be at least 1 character' })
     .max(50, { message: 'Name must be 50 characters' }),
-  gender: z.enum(['MALE', 'FEMALE', 'CUSTOM']),
+  gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
 });
-export type createUser = z.infer<typeof createUserSchema>;
-export const loginUserSchema = z.object({
+export type CREATE_USER_TYPE = z.infer<typeof CREATE_USER_SCHEMA>;
+
+export const LOGIN_USER_SCHEMA = z.object({
   email: z.string().min(1),
   password: z.string().min(6),
 });
-export const verifyUserSchema = z.object({
+export type LOGIN_USER_TYPE = z.infer<typeof LOGIN_USER_SCHEMA>;
+
+export const VERIFY_USER_SCHEMA = z.object({
   email: z.string().email().min(1),
-  token: z.string().min(9).max(9),
+  token: z.string().min(4).max(4),
 });
-export const forgotSchema = z.object({
+export type VERIFY_USER_TYPE = z.infer<typeof VERIFY_USER_SCHEMA>;
+
+export const FORGOT_PASSWORD_SCHEMA = z.object({
   email: z.string().email().min(1),
 });
-export const resetSchema = z.object({
+export type FORGOT_PASSWORD_TYPE = z.infer<typeof FORGOT_PASSWORD_SCHEMA>;
+
+export const RESET_PASSWORD_SCHEMA = z.object({
   email: z.string().email().min(1),
   token: z.string().min(5),
   newPassword: z.string().min(1),
 });
+export type RESET_PASSWORD_TYPE = z.infer<typeof RESET_PASSWORD_SCHEMA>;
+
+export const RESEND_OTP_SCHEMA = z.object({
+  email: z.string().email().min(1),
+})
+
+export type RESEND_OTP_TYPE = z.infer<typeof RESEND_OTP_SCHEMA>

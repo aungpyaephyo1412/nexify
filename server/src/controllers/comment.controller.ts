@@ -1,31 +1,25 @@
 import { Request, Response } from 'express';
 import { prisma, tryCatch } from '../utils';
+import { stringToObject } from '../helpers';
+import { USER_DTO_IN_POST } from '../helpers/post.helper';
 
 export const CommentController = {
   async index(req: Request, res: Response) {
     await tryCatch(async () => {
-      const { page = 1, pageSize = 20, sort, q = '', postId } = req.query;
+      const { page = 1, pageSize = 20, sort, postId } = req.query;
       const data = await prisma.comment
         .paginate({
-          ...(sort && { orderBy: JSON.parse(JSON.stringify(sort, null, 2)) }),
+          ...(sort && { orderBy: stringToObject(sort as string) }),
           where: {
             ...(postId && {
               postId: {
-                equals: postId.toString(),
+                equals: postId as string,
               },
             }),
           },
           include: {
             user: {
-              select: {
-                id: true,
-                bio: true,
-                email: true,
-                name: true,
-                username: true,
-                profilePicture: true,
-                gender: true,
-              },
+              select: USER_DTO_IN_POST,
             },
           },
         })
@@ -41,6 +35,7 @@ export const CommentController = {
       });
     }, res);
   },
+
   async store(req: Request, res: Response) {
     await tryCatch(async () => {
       await prisma.comment.create({
@@ -49,6 +44,7 @@ export const CommentController = {
       return res.status(201).json({ message: 'Post created!' });
     }, res);
   },
+
   async show(req: Request, res: Response) {
     const { id } = req.params;
     await tryCatch(async () => {
@@ -56,21 +52,14 @@ export const CommentController = {
         where: { id },
         include: {
           user: {
-            select: {
-              id: true,
-              bio: true,
-              email: true,
-              name: true,
-              username: true,
-              profilePicture: true,
-              gender: true,
-            },
+            select: USER_DTO_IN_POST,
           },
         },
       });
       return res.status(200).json(data);
     }, res);
   },
+
   async delete(req: Request, res: Response) {
     const { id } = req.params;
     await tryCatch(async () => {

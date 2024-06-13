@@ -10,6 +10,7 @@ import { BadgeCheck, Calendar } from "lucide-react";
 import moment from "moment";
 import { ReactNode } from "react";
 import { auth } from "../../../../../auth";
+import FollowingButton from "@/components/following-button";
 
 const Layout = async ({
   children,
@@ -30,6 +31,7 @@ const Layout = async ({
     }
   );
   if (error) return <NotFound />;
+  const following = data.data.Followers.find(follow => follow.followerId === session?.user.id)
   return (
     <div className="w-full h-full">
       <BackNavigation title={data.data.name} />
@@ -49,9 +51,7 @@ const Layout = async ({
           {session?.user.username === slug ? (
             <EditProfileDialog data={data.data} />
           ) : (
-            <button className="border border-gray-500 px-4 py-2 rounded-full text-sm">
-              Follow
-            </button>
+            <FollowingButton following={false} authId={session!.user.id} otherUserId={data.data.id}/>
           )}
         </div>
         <div className="px-3 lg:px-6 space-y-5 mb-5">
@@ -84,16 +84,22 @@ const Layout = async ({
             name={"Posts"}
             className="px-6 "
           />
-          <NavButton
-            href={`/${data.data.username}/following`}
-            name={"Following"}
-            className="px-6 "
-          />
-          <NavButton
-            href={`/${data.data.username}/followers`}
-            name={"Follower"}
-            className="px-6 "
-          />
+          {
+            session?.user.id === data.data.id && (
+              <>
+                <NavButton
+                  href={`/${data.data.username}/following`}
+                  name={"Following"}
+                  className="px-6 "
+                />
+                <NavButton
+                  href={`/${data.data.username}/followers`}
+                  name={"Follower"}
+                  className="px-6 "
+                />
+              </>
+            )
+          }
         </div>
       </div>
       <div className="px-3 lg:px-6">{children}</div>
