@@ -1,4 +1,3 @@
-"use client";
 import QueryProvider from "@/components/query-provider";
 import { ReactNode } from "react";
 

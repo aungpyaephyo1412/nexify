@@ -1,17 +1,22 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { createJwt, passwordHash, prisma } from '../utils';
-import { faker, tr } from '@faker-js/faker';
+import { createJwt, passwordHash, prisma, tryCatch } from '../utils';
 import { message, transporter, verify_registerMessage } from '../utils/mail';
+import { generateNumberToken } from '../helpers';
+import {
+  CREATE_USER_TYPE,
+  LOGIN_USER_TYPE, RESEND_OTP_TYPE,
+  RESET_PASSWORD_TYPE,
+  VERIFY_USER_TYPE,
+} from '../types/user.types';
+import { findUserByEmail, LOGIN_USER_DTO } from '../helpers/user.helper';
 
 export const AuthController = {
   async register(req: Request, res: Response) {
-    try {
-      const { email } = req.body;
-      const hashPassword = await passwordHash(req.body.password);
-      const rememberToken = faker.number
-        .int({ min: 100000000, max: 999999999 })
-        .toString();
+    await tryCatch(async () => {
+      const { email, password }: CREATE_USER_TYPE = req.body;
+      const hashPassword = await passwordHash(password);
+      const rememberToken = generateNumberToken(1000, 9999);
       await prisma.user.create({
         data: {
           ...req.body,
@@ -19,25 +24,20 @@ export const AuthController = {
           rememberToken,
         },
       });
-      console.log('email');
       await transporter.sendMail(
         verify_registerMessage(rememberToken, [email])
       );
       return res
         .status(200)
         .send({ message: 'Registration successful,Check your email' });
-    } catch (err) {
-      console.log(err);
-      return res.status(400).send({ message: 'User already existed' });
-    }
+    }, res);
   },
+
   async verify(req: Request, res: Response) {
-    try {
-      const { email, token } = req.body;
-      const user = await prisma.user.findUnique({
-        where: { email },
-      });
-      if (!user) return res.status(404).json({ error: 'User not found!' });
+    await tryCatch(async () => {
+      const { email, token }: VERIFY_USER_TYPE = req.body;
+      const user = await findUserByEmail(email);
+      if (!user) return res.status(404).json({ message: 'User not found!' });
       if (user.rememberToken !== token)
         return res.status(400).json({ error: 'Invalid token!' });
       await prisma.user.update({
@@ -50,20 +50,33 @@ export const AuthController = {
         },
       });
       return res.status(200).send({ message: 'Email verified successful!' });
-    } catch (e) {
-      console.log(e);
-      return res.status(400).send({ message: 'Something went wrong!' });
-    }
+    }, res);
   },
-  async checkExitToken(req: Request, res: Response) {
-    try {
+
+  async resendOTP (req: Request, res: Response){
+    const {email} : RESEND_OTP_TYPE = req.body
+    await tryCatch(async ()=>{
+      const user = await findUserByEmail(email)
+      if (!user) return res.status(404).json({message : "user not found"})
+      if (!user.rememberToken) return res.status(404).json({message : "Already verify"})
+      await transporter.sendMail(
+        verify_registerMessage(user.rememberToken, [email])
+      );
+      return res
+        .status(200)
+        .send({ message: 'Otp send again,Check your email' });
+    },res)
+  },
+
+  async checkResetToken(req: Request, res: Response) {
+    await tryCatch(async () => {
       const { token } = req.params;
       const user = await prisma.user.findFirst({
         where: {
           AND: [
             {
               resetToken: {
-                equals: token.toString(),
+                equals: token,
               },
             },
             {
@@ -74,32 +87,17 @@ export const AuthController = {
           ],
         },
       });
-      if (!user) return res.status(404).json({ error: 'User not found!' });
+      if (!user)
+        return res.status(404).json({ message: 'Something went wrong!' });
       return res.status(200).send({ message: 'Valid token!' });
-    } catch (e) {
-      console.log(e);
-      return res.status(400).send({ message: 'Something went wrong!' });
-    }
+    }, res);
   },
+
   async login(req: Request, res: Response) {
-    const { email, password } = req.body;
+    const { email, password }: LOGIN_USER_TYPE = req.body;
     const user = await prisma.user.findUnique({
       where: { email },
-      select: {
-        id: true,
-        bio: true,
-        isVerified: true,
-        email: true,
-        name: true,
-        username: true,
-        profilePicture: true,
-        gender: true,
-        isAdmin: true,
-        isBlocked: true,
-        dateOfBirth: true,
-        createdAt: true,
-        password: true,
-      },
+      select: LOGIN_USER_DTO,
     });
     if (!user)
       return res.status(400).send({ message: 'Something went wrong!' });
@@ -116,8 +114,9 @@ export const AuthController = {
       jwt: createJwt({ p, ...userData }),
     });
   },
+
   async forgotPassword(req: Request, res: Response) {
-    try {
+    await tryCatch(async () => {
       const { email } = req.body;
       const user = await prisma.user.findUnique({
         where: {
@@ -139,14 +138,12 @@ export const AuthController = {
       return res.status(201).json({
         message: 'Email sent',
       });
-    } catch (e) {
-      console.log(e);
-      return res.status(400).send({ message: 'Something went wrong!' });
-    }
+    }, res);
   },
+
   async resetPassword(req: Request, res: Response) {
-    try {
-      const { email, token, newPassword } = req.body;
+    await tryCatch(async () => {
+      const { email, token, newPassword }: RESET_PASSWORD_TYPE = req.body;
       const user = await prisma.user.findFirst({
         where: {
           AND: [
@@ -157,7 +154,7 @@ export const AuthController = {
             },
             {
               resetToken: {
-                equals: token.toString(),
+                equals: token,
               },
             },
             {
@@ -170,7 +167,7 @@ export const AuthController = {
       });
       if (!user) {
         return res.status(400).json({
-          error: 'User not found',
+          message: 'Something went wrong!',
         });
       }
       const password = await passwordHash(newPassword);
@@ -187,9 +184,6 @@ export const AuthController = {
       return res.status(200).json({
         message: 'Password updated',
       });
-    } catch (e) {
-      console.log(e);
-      return res.status(400).send({ message: 'Something went wrong!' });
-    }
+    }, res);
   },
 };

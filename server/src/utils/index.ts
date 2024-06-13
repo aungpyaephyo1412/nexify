@@ -13,9 +13,9 @@ export const passwordHash = async (password: string) => {
   const salt = await bcrypt.genSalt(10);
   return await bcrypt.hash(password, salt);
 };
-export const apiVersion = (): string => `v${process.env['API_VERSION'] || 1}`;
 
 export const prisma = new PrismaClient().$extends(pagination());
+
 export const isEmptyObj = (obj: object) =>
   Object.keys(obj).length === 0 && obj.constructor === Object;
 

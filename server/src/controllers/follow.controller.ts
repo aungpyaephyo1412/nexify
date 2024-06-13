@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { prisma, tryCatch } from '../utils';
+import { stringToObject } from '../helpers';
+import { USER_DTO_IN_POST } from '../helpers/post.helper';
 
 export const FollowController = {
   async index(req: Request, res: Response) {
@@ -8,46 +10,29 @@ export const FollowController = {
         page = 1,
         pageSize = 20,
         sort,
-        q = '',
         followerId,
         followingId,
       } = req.query;
       const data = await prisma.following
         .paginate({
-          ...(sort && { orderBy: JSON.parse(JSON.stringify(sort, null, 2)) }),
+          ...(sort && { orderBy: stringToObject(sort as string) }),
           ...(followerId && {
             where: {
-              followerId: followerId.toString(),
+              followerId: followerId as string,
             },
           }),
           ...(followingId && {
             where: {
-              followingId: followingId.toString(),
+              followingId: followingId as string,
             },
           }),
           include: {
-            ...(followerId && {
-              following: {
-                select: {
-                  id: true,
-                  username: true,
-                  name: true,
-                  email: true,
-                  profilePicture: true,
-                },
-              },
-            }),
-            ...(followingId && {
-              follower: {
-                select: {
-                  id: true,
-                  username: true,
-                  name: true,
-                  email: true,
-                  profilePicture: true,
-                },
-              },
-            }),
+            following: {
+              select: USER_DTO_IN_POST,
+            },
+            follower: {
+              select: USER_DTO_IN_POST,
+            },
           },
         })
         .withPages({
@@ -62,6 +47,7 @@ export const FollowController = {
       });
     }, res);
   },
+
   async follow(req: Request, res: Response) {
     await tryCatch(async () => {
       const { followerId, followingId } = req.body;
@@ -69,25 +55,22 @@ export const FollowController = {
         where: {
           AND: [
             {
-              followerId: {
-                equals: followerId,
-              },
+              followerId,
             },
             {
-              followingId: {
-                equals: followingId,
-              },
+              followingId,
             },
           ],
         },
       });
-      if (data) return res.status(400).json({ message: 'Already followed' });
+      if (data) return res.status(200).json({ message: 'Already followed' });
       await prisma.following.create({
         data: req.body,
       });
       return res.status(201).json({ message: 'Post created!' });
     }, res);
   },
+
   async unfollow(req: Request, res: Response) {
     await tryCatch(async () => {
       const { id } = req.params;

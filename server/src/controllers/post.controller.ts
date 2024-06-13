@@ -1,20 +1,22 @@
 import { Request, Response } from 'express';
-import { prisma, tryCatch } from '../utils';
+import { isEmptyObj, prisma, tryCatch } from '../utils';
+import { stringToObject } from '../helpers';
+import { USER_DTO_IN_POST } from '../helpers/post.helper';
 
 export const PostController = {
   async index(req: Request, res: Response) {
     await tryCatch(async () => {
-      const { page = 1, pageSize = 20, sort, q = '' } = req.query;
+      const { page = 1, pageSize = 45, sort, q } = req.query;
       const data = await prisma.post
         .paginate({
-          ...(sort && { orderBy: JSON.parse(JSON.stringify(sort, null, 2)) }),
+          ...(sort && { orderBy: stringToObject(sort as string) }),
           where: {
             ...(q && {
               OR: [
                 {
                   caption: {
                     contains: q.toString(),
-                    mode: 'insensitive', // Default value: default
+                    mode: 'insensitive',
                   },
                 },
               ],
@@ -22,36 +24,20 @@ export const PostController = {
           },
           include: {
             user: {
-              select: {
-                id: true,
-                bio: true,
-                email: true,
-                name: true,
-                username: true,
-                profilePicture: true,
-                gender: true,
-              },
+              select: USER_DTO_IN_POST,
             },
             _count: true,
             Comment: {
               include: {
                 user: {
-                  select: {
-                    id: true,
-                    username: true,
-                    name: true,
-                  },
+                  select: USER_DTO_IN_POST,
                 },
               },
             },
             Like: {
               include: {
                 user: {
-                  select: {
-                    id: true,
-                    username: true,
-                    name: true,
-                  },
+                  select: USER_DTO_IN_POST,
                 },
               },
             },
@@ -69,14 +55,18 @@ export const PostController = {
       });
     }, res);
   },
+
   async store(req: Request, res: Response) {
     await tryCatch(async () => {
+      if (isEmptyObj(req.body))
+        return res.status(400).json({ message: 'Request body not found!' });
       await prisma.post.create({
         data: req.body,
       });
       return res.status(201).json({ message: 'Post created!' });
     }, res);
   },
+
   async show(req: Request, res: Response) {
     const { id } = req.params;
     await tryCatch(async () => {
@@ -87,39 +77,37 @@ export const PostController = {
           Comment: {
             include: {
               user: {
-                select: {
-                  id: true,
-                  username: true,
-                  name: true,
-                },
+                select: USER_DTO_IN_POST,
               },
             },
           },
           Like: {
             include: {
               user: {
-                select: {
-                  id: true,
-                  username: true,
-                  name: true,
-                },
+                select: USER_DTO_IN_POST,
               },
             },
           },
           user: {
-            select: {
-              id: true,
-              bio: true,
-              email: true,
-              name: true,
-              username: true,
-              profilePicture: true,
-              gender: true,
-            },
+            select: USER_DTO_IN_POST,
           },
         },
       });
       return res.status(200).json(data);
+    }, res);
+  },
+
+  async delete(req: Request, res: Response) {
+    await tryCatch(async () => {
+      const { id } = req.params;
+      await prisma.post.delete({
+        where: {
+          id,
+        },
+      });
+      return res.status(200).json({
+        message: 'Delete post!',
+      });
     }, res);
   },
 };
