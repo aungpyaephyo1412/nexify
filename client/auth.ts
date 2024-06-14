@@ -1,71 +1,66 @@
-import { authConfig } from "@/configs/auth.config";
-import safeFetch from "@/lib/safeFetch";
-import { AuthUser } from "@/types/auth.types";
-import { LoginUserSchema } from "@/types/user.types";
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
+import { authConfig } from '@/auth.config';
+import safeFetch from '@/lib/safeFetch';
+import { AUTH_USER, LOGIN_USER_SCHEMA } from '@/types/user.types';
+import NextAuth from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
 
-export const { auth, signIn, signOut, unstable_update, handlers } = NextAuth({
+export const { auth, signIn, signOut, handlers, unstable_update } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
-        const { error, data } = await safeFetch(
-          LoginUserSchema,
-          "/auth/login",
-          {
-            cache: "no-store",
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify(credentials),
-          }
-        );
+        const { error, data } = await safeFetch(LOGIN_USER_SCHEMA, '/auth/login', {
+          cache: 'no-store',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify(credentials),
+        });
         if (error) return null;
         return {
+          jwt: data.jwt,
           id: data.data.id,
-          username: data.data.username,
+          bio: data.data.bio,
           name: data.data.name,
           email: data.data.email,
-          isVerified: data.data.isVerified,
           isAdmin: data.data.isAdmin,
-          isBlocked: data.data.isBlocked,
+          username: data.data.username,
           createdAt: data.data.createdAt,
-          bio: data.data.bio,
+          isBlocked: data.data.isBlocked,
+          isVerified: data.data.isVerified,
           dateOfBirth: data.data.dateOfBirth,
           profilePicture: data.data.profilePicture,
-          jwt: data.jwt,
         };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user, session, trigger }) {
-      if (trigger === "update") {
+      if (trigger === 'update') {
         return {
           ...token,
           ...session.user,
         };
       }
-      if (trigger === "signIn") {
+      if (trigger === 'signIn') {
         if (user)
           return {
             ...token,
             id: user.id,
-            username: user.username,
+            bio: user.bio,
+            jwt: user.jwt,
             name: user.name,
             email: user.email,
-            isVerified: user.isVerified,
             isAdmin: user.isAdmin,
-            isBlocked: user.isBlocked,
+            username: user.username,
             createdAt: user.createdAt,
-            bio: user.bio,
+            isBlocked: user.isBlocked,
+            isVerified: user.isVerified,
             dateOfBirth: user.dateOfBirth,
             profilePicture: user.profilePicture,
-            jwt: user.jwt,
-          } as AuthUser;
+          } as AUTH_USER;
       }
 
       return token;
@@ -76,17 +71,17 @@ export const { auth, signIn, signOut, unstable_update, handlers } = NextAuth({
           ...session,
           user: {
             id: token.id,
-            username: token.username,
+            bio: token.bio,
+            jwt: token.jwt,
             name: token.name,
             email: token.email,
-            isVerified: token.isVerified,
             isAdmin: token.isAdmin,
-            isBlocked: token.isBlocked,
+            username: token.username,
             createdAt: token.createdAt,
-            bio: token.bio,
+            isBlocked: token.isBlocked,
+            isVerified: token.isVerified,
             dateOfBirth: token.dateOfBirth,
             profilePicture: token.profilePicture,
-            jwt: token.jwt,
           },
         };
       }
@@ -95,7 +90,7 @@ export const { auth, signIn, signOut, unstable_update, handlers } = NextAuth({
     },
   },
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
     maxAge: 60 * 60 * 24 * 30,
   },
 });
