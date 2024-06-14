@@ -26,11 +26,13 @@ export const register = action(USER_REGISTER_SCHEMA, async (parsedInput) => {
   });
   if (error) throw new Error('Something went wrong!');
   await signIn('credentials', parsedInput);
+  redirect('/home');
 });
 
 export const login = action(USER_LOGIN_SCHEMA, async (parsedInput) => {
   try {
     await signIn('credentials', parsedInput);
+    redirect('/home');
   } catch (error) {
     throw error;
   }

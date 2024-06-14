@@ -12,7 +12,7 @@ const Layout = async ({ children }: { children: ReactNode }) => {
     <>
       <main className="max-w-screen-xl mx-auto flex w-full">
         <aside className="hidden lg:block w-[300px] h-screen sticky top-0 border-e border-e-gray-500"></aside>
-        <section className="flex flex-1 flex-col min-h-dvh pb-[85px]">
+        <section className="flex flex-1 flex-col min-h-dvh pb-[65px]">
           {children}
           <BottomNavigation />
         </section>

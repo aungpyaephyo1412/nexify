@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
 import moment from 'moment';
 import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 interface Props {
   onChange: (d: Date) => void;
