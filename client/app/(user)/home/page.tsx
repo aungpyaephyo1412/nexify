@@ -8,7 +8,7 @@ const Page = () => {
         <ForYou />
       </TabsContent>
       <TabsContent value={'following'} className="pb-[35px] space-y-2">
-        following
+        Following page is under maintenance!
       </TabsContent>
     </div>
   );

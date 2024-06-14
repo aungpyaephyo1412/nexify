@@ -60,7 +60,7 @@ const PostCreateForm = () => {
         }
         throw new Error('Something went wrong');
       })}
-      className="screen-padding"
+      className="px-2 lg:px-4"
     >
       <div className="bg-white rounded-lg shadow p-5">
         <div className="flex items-start gap-x-5">

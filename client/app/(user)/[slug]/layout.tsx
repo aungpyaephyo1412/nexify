@@ -1,6 +1,7 @@
 import NotFound from '@/app/(user)/not-found';
 import { auth } from '@/auth';
 import EditProfile from '@/components/edit-profile';
+import FollowBtn from '@/components/follow-btn';
 import HeaderNav from '@/components/header-nav';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import safeFetch from '@/lib/safeFetch';
@@ -27,6 +28,7 @@ const Layout = async ({
     },
   });
   if (error) return <NotFound />;
+  const alreadyFollow = data.data.Followers.find((p) => p.followerId === session?.user.id);
   return (
     <>
       <HeaderNav
@@ -44,7 +46,11 @@ const Layout = async ({
               <AvatarFallback>{session?.user?.name?.substring(0, 2)}</AvatarFallback>
             </Avatar>
           </div>
-          {session?.user.username === slug ? <EditProfile user={data} /> : <button>Follow</button>}
+          {session?.user.username === slug ? (
+            <EditProfile user={data} />
+          ) : (
+            <FollowBtn followingId={data.data.id} unfollowId={alreadyFollow?.id} />
+          )}
         </div>
         <div className="screen-padding space-y-2 mb-5">
           <div className="space-y-1">
@@ -59,9 +65,9 @@ const Layout = async ({
             <Calendar size={13} /> Joined at {moment(data.data.createdAt).format('ll')}
           </p>
         </div>
-        <div className="w-full flex gap-x-5 items-center px-3 lg:px-6 mb-7">
-          <div className="hover:underline text-sm">{data.data._count.Followers} Following</div>
-          <div className="hover:underline text-sm">{data.data._count.Following} Followers</div>
+        <div className="w-full flex gap-x-5 items-center screen-padding mb-7">
+          <div className="hover:underline text-sm">{data.data._count.Following} Following</div>
+          <div className="hover:underline text-sm">{data.data._count.Followers} Followers</div>
         </div>
       </div>
       <div>{children}</div>

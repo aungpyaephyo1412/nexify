@@ -10,7 +10,7 @@ const safeFetch = async <T extends ZodSchema<any>>(
   const res = await response.json();
   const validateFields = schema.safeParse(res);
   if (!validateFields.success) {
-    console.log(validateFields.error.errors);
+    console.log(validateFields.error.flatten().fieldErrors);
     return {
       error: validateFields.error.message,
       data: null,

@@ -12,6 +12,22 @@ export const POST_COUNT_SCHEMA = z.object({
   Like: z.number(),
   Comment: z.number(),
 });
+export const POSTS_COMMENT_SCHEMA = z.object({
+  id: z.string().min(1),
+  caption: z.string().min(1),
+  postId: z.string().min(1),
+  userId: z.string().min(1),
+  createdAt: z.string().min(1),
+  user: POSTS_USER_SCHEMA,
+});
+export const POSTS_LIKE_SCHEMA = z.object({
+  id: z.string().min(1),
+  postId: z.string().min(1),
+  userId: z.string().min(1),
+  createdAt: z.string().min(1),
+  updatedAt: z.string().min(1),
+  user: POSTS_USER_SCHEMA,
+});
 export const POSTS_DATA_SCHEMA = z.object({
   id: z.string().min(1),
   caption: z.string().nullish(),
@@ -21,8 +37,8 @@ export const POSTS_DATA_SCHEMA = z.object({
   updatedAt: z.string().min(1),
   user: POSTS_USER_SCHEMA,
   _count: POST_COUNT_SCHEMA,
-  Comment: z.array(POSTS_USER_SCHEMA),
-  Like: z.array(POSTS_USER_SCHEMA),
+  Comment: z.array(POSTS_COMMENT_SCHEMA),
+  Like: z.array(POSTS_LIKE_SCHEMA),
 });
 export type POSTS_DATA_TYPE = z.infer<typeof POSTS_DATA_SCHEMA>;
 
@@ -46,3 +62,20 @@ export const POST_CREATE_SCHEMA = z.object({
     ),
 });
 export type POST_CREATE_TYPE = z.infer<typeof POST_CREATE_SCHEMA>;
+
+export const CREATE_COMMENT_SCHEMA = z.object({
+  caption: z.string().min(1).max(256),
+});
+export const COMMENTS_DATA_SCHEMA = z.object({
+  id: z.string().min(1),
+  caption: z.string().min(1),
+  postId: z.string().min(1),
+  userId: z.string().min(1),
+  createdAt: z.string().min(1),
+  updatedAt: z.string().min(1),
+  user: POSTS_USER_SCHEMA,
+});
+export const COMMENTS_SCHEMA = z.object({
+  data: z.array(COMMENTS_DATA_SCHEMA),
+  meta: DEFAULT_META_SCHEMA,
+});
