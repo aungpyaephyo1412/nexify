@@ -13,7 +13,7 @@ const Page = () => {
   const [user, setUser] = useState({
     confirmPassword: '',
     password: '',
-    code: slug,
+    code: slug.toString(),
   });
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUser((p) => ({
