@@ -13,8 +13,8 @@ const BottomNavigation = () => {
   const profileLink = concatString(['/', data?.user.username]);
   return (
     <footer className="fixed inset-x-0 bottom-0 bg-transparent">
-      <nav className="w-full h-16 max-w-[680px]  mx-auto bg-white border border-gray-400 border-x-0">
-        <div className="grid h-full max-w-[680px] grid-cols-5 mx-auto">
+      <nav className="w-full h-16 max-w-[580px]  mx-auto bg-white border border-gray-400 border-x-0">
+        <div className="grid h-full max-w-[580px] grid-cols-5 mx-auto">
           <Tooltip>
             <TooltipTrigger asChild>
               <Link

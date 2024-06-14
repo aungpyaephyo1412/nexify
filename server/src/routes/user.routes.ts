@@ -8,7 +8,6 @@ export default (router: express.Router) => {
   router
     .get('/users', verifyUserToken, UsersController.index)
     .get('/users/:id', UsersController.show)
-    .post('/users/:id', UsersController.show)
     .delete('/users/:id', verifyUserToken, UsersController.delete)
     .put(
       '/users/:id',

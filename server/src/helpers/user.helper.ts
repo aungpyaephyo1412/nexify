@@ -58,12 +58,14 @@ export const USER_BY_ID_DTO = {
   profilePicture: true,
   Followers: {
     select: {
+      id: true,
       followerId: true,
       followingId: true,
     },
   },
   Following: {
     select: {
+      id: true,
       followerId: true,
       followingId: true,
     },

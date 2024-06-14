@@ -93,12 +93,14 @@ export const USER_BY_ID_SCHEMA = z.object({
     profilePicture: z.string().nullish(),
     Followers: z.array(
       z.object({
+        id: z.string(),
         followerId: z.string(),
         followingId: z.string(),
       }),
     ),
     Following: z.array(
       z.object({
+        id: z.string(),
         followerId: z.string(),
         followingId: z.string(),
       }),
@@ -129,4 +131,15 @@ export const USER_UPDATE_SCHEMA = z.object({
       (file) => (file && file.length > 0 ? ACCEPTED_IMAGE_TYPES.includes(file[0].type) : true),
       'Only .jpg, .jpeg, .png and .webp formats are supported.',
     ),
+});
+
+export const USER_FOLLOW_SCHEMA = z.object({
+  followingId: z.string().min(1),
+  slug: z.string().min(1),
+});
+
+export const USER_UNFOLLOW_SCHEMA = z.object({
+  unfollowId: z.string().min(1),
+  slug: z.string().min(1),
+  followingId: z.string().min(1),
 });

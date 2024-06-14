@@ -8,7 +8,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <section className="w-full flex flex-col flex-1 pt-5 bg-gray-100">
       <PostCreateForm />
-      <Tabs defaultValue="foryou" className="w-full flex-1 flex flex-col screen-padding">
+      <Tabs defaultValue="foryou" className="w-full flex-1 flex flex-col px-2 lg:px-4">
         <TabsList className="w-full flex-1 h-full p-0 flex flex-col bg-transparent">
           <QueryProvider>{children}</QueryProvider>
         </TabsList>
