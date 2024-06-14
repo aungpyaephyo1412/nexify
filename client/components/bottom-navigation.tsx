@@ -1,15 +1,5 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn, concatString } from '@/lib/utils';
@@ -22,9 +12,9 @@ const BottomNavigation = () => {
   const { data } = useSession({ required: true });
   const profileLink = concatString(['/', data?.user.username]);
   return (
-    <footer className="fixed inset-x-0 bottom-3 bg-transparent">
-      <nav className="w-full h-16 max-w-lg  mx-auto bg-white border border-gray-400 rounded-full ">
-        <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
+    <footer className="fixed inset-x-0 bottom-0 bg-transparent">
+      <nav className="w-full h-16 max-w-[680px]  mx-auto bg-white border border-gray-400 border-x-0">
+        <div className="grid h-full max-w-[680px] grid-cols-5 mx-auto">
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
@@ -97,19 +87,19 @@ const BottomNavigation = () => {
             </DrawerTrigger>
             <DrawerContent className="max-w-screen-sm mx-auto">
               <ScrollArea className="h-[90dvh]">
-                <DrawerHeader>
-                  <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                  <DrawerDescription>This action cannot be undone.</DrawerDescription>
-                </DrawerHeader>
-                <div></div>
-                <DrawerFooter>
-                  <div className="grid grid-cols-2 gap-5">
-                    <DrawerClose asChild>
-                      <Button variant="outline">Cancel</Button>
-                    </DrawerClose>
-                    <Button>Submit</Button>
-                  </div>
-                </DrawerFooter>
+                {/*<DrawerHeader>*/}
+                {/*  <DrawerTitle>Are you absolutely sure?</DrawerTitle>*/}
+                {/*  <DrawerDescription>This action cannot be undone.</DrawerDescription>*/}
+                {/*</DrawerHeader>*/}
+                {/*<div></div>*/}
+                {/*<DrawerFooter>*/}
+                {/*  <div className="grid grid-cols-2 gap-5">*/}
+                {/*    <DrawerClose asChild>*/}
+                {/*      <Button variant="outline">Cancel</Button>*/}
+                {/*    </DrawerClose>*/}
+                {/*    <Button>Submit</Button>*/}
+                {/*  </div>*/}
+                {/*</DrawerFooter>*/}
               </ScrollArea>
             </DrawerContent>
           </Drawer>

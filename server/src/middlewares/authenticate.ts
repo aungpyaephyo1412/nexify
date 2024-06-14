@@ -13,9 +13,7 @@ export const verifyUserToken = (
     if (token === 'null' || !token)
       return res.status(401).send('Unauthorized request');
     jwt.verify(token, process.env.TOKEN_SECRET as string, (error, decoded) => {
-      console.log(error, decoded);
       if (error) {
-        console.log(error.message);
         return res.status(401).json({
           error: error.message,
         });
