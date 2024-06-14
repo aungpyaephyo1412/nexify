@@ -50,7 +50,6 @@ export const USER_BY_ID_DTO = {
   email: true,
   gender: true,
   isAdmin: true,
-  password: true,
   username: true,
   isBlocked: true,
   createdAt: true,

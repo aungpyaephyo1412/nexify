@@ -16,6 +16,12 @@ export const CREATE_USER_SCHEMA = z.object({
 });
 export type CREATE_USER_TYPE = z.infer<typeof CREATE_USER_SCHEMA>;
 
+export const USER_UPDATE_SCHEMA = z.object({
+  profilePicture: z.string().optional(),
+  name: z.string().min(6),
+  bio: z.string().optional(),
+  dateOfBirth: z.coerce.date().optional(),
+});
 export const LOGIN_USER_SCHEMA = z.object({
   email: z.string().min(1),
   password: z.string().min(6),
@@ -42,6 +48,6 @@ export type RESET_PASSWORD_TYPE = z.infer<typeof RESET_PASSWORD_SCHEMA>;
 
 export const RESEND_OTP_SCHEMA = z.object({
   email: z.string().email().min(1),
-})
+});
 
-export type RESEND_OTP_TYPE = z.infer<typeof RESEND_OTP_SCHEMA>
+export type RESEND_OTP_TYPE = z.infer<typeof RESEND_OTP_SCHEMA>;
