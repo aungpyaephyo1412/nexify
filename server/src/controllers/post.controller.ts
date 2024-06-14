@@ -58,6 +58,7 @@ export const PostController = {
 
   async store(req: Request, res: Response) {
     await tryCatch(async () => {
+      console.log(req.body);
       if (isEmptyObj(req.body))
         return res.status(400).json({ message: 'Request body not found!' });
       await prisma.post.create({
