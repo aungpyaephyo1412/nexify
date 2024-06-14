@@ -5,7 +5,8 @@ import { message, transporter, verify_registerMessage } from '../utils/mail';
 import { generateNumberToken } from '../helpers';
 import {
   CREATE_USER_TYPE,
-  LOGIN_USER_TYPE, RESEND_OTP_TYPE,
+  LOGIN_USER_TYPE,
+  RESEND_OTP_TYPE,
   RESET_PASSWORD_TYPE,
   VERIFY_USER_TYPE,
 } from '../types/user.types';
@@ -53,19 +54,20 @@ export const AuthController = {
     }, res);
   },
 
-  async resendOTP (req: Request, res: Response){
-    const {email} : RESEND_OTP_TYPE = req.body
-    await tryCatch(async ()=>{
-      const user = await findUserByEmail(email)
-      if (!user) return res.status(404).json({message : "user not found"})
-      if (!user.rememberToken) return res.status(404).json({message : "Already verify"})
+  async resendOTP(req: Request, res: Response) {
+    const { email }: RESEND_OTP_TYPE = req.body;
+    await tryCatch(async () => {
+      const user = await findUserByEmail(email);
+      if (!user) return res.status(404).json({ message: 'user not found' });
+      if (!user.rememberToken)
+        return res.status(404).json({ message: 'Already verify' });
       await transporter.sendMail(
         verify_registerMessage(user.rememberToken, [email])
       );
       return res
         .status(200)
         .send({ message: 'Otp send again,Check your email' });
-    },res)
+    }, res);
   },
 
   async checkResetToken(req: Request, res: Response) {

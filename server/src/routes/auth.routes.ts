@@ -3,7 +3,8 @@ import { validator } from '../middlewares/validator';
 import {
   CREATE_USER_SCHEMA,
   FORGOT_PASSWORD_SCHEMA,
-  LOGIN_USER_SCHEMA, RESEND_OTP_SCHEMA,
+  LOGIN_USER_SCHEMA,
+  RESEND_OTP_SCHEMA,
   RESET_PASSWORD_SCHEMA,
   VERIFY_USER_SCHEMA,
 } from '../types/user.types';
@@ -17,7 +18,11 @@ export default (router: Router) => {
     )
     .post('/auth/login', validator(LOGIN_USER_SCHEMA), AuthController.login)
     .post('/auth/verify', validator(VERIFY_USER_SCHEMA), AuthController.verify)
-    .post('/auth/resend-otp', validator(RESEND_OTP_SCHEMA), AuthController.resendOTP)
+    .post(
+      '/auth/resend-otp',
+      validator(RESEND_OTP_SCHEMA),
+      AuthController.resendOTP
+    )
     .get('/auth/verify/:token', AuthController.checkResetToken)
     .post(
       '/auth/forgot-password',
