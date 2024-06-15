@@ -1,14 +1,16 @@
 'use client';
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import DialogDrawer from '@/components/dialog-drawer';
+import PostCreateForm from '@/components/form/post-create-form';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn, concatString } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
 const BottomNavigation = () => {
   const path = usePathname();
+  const [open, setOpen] = useState(false);
   const { data } = useSession({ required: true });
   const profileLink = concatString(['/', data?.user.username]);
   return (
@@ -63,54 +65,33 @@ const BottomNavigation = () => {
               <p>Bookmark</p>
             </TooltipContent>
           </Tooltip>
-          <Drawer>
-            <DrawerTrigger asChild>
-              <div className="flex items-center justify-center">
-                <button className="inline-flex items-center justify-center w-10 h-10 font-medium bg-green-500 rounded-full group focus:ring-4 focus:ring-blue-300 focus:outline-none">
-                  <svg
-                    className={cn('size-5 text-white')}
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 18 18"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 1v16M1 9h16"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </DrawerTrigger>
-            <DrawerContent className="max-w-screen-sm mx-auto">
-              <ScrollArea className="h-[90dvh]">
-                {/*<DrawerHeader>*/}
-                {/*  <DrawerTitle>Are you absolutely sure?</DrawerTitle>*/}
-                {/*  <DrawerDescription>This action cannot be undone.</DrawerDescription>*/}
-                {/*</DrawerHeader>*/}
-                {/*<div></div>*/}
-                {/*<DrawerFooter>*/}
-                {/*  <div className="grid grid-cols-2 gap-5">*/}
-                {/*    <DrawerClose asChild>*/}
-                {/*      <Button variant="outline">Cancel</Button>*/}
-                {/*    </DrawerClose>*/}
-                {/*    <Button>Submit</Button>*/}
-                {/*  </div>*/}
-                {/*</DrawerFooter>*/}
-              </ScrollArea>
-            </DrawerContent>
-          </Drawer>
+          <div onClick={() => setOpen((p) => !p)} className="flex items-center justify-center">
+            <button className="inline-flex items-center justify-center w-10 h-10 font-medium bg-green-500 rounded-full group focus:ring-4 focus:ring-blue-300 focus:outline-none">
+              <svg
+                className={cn('size-5 text-white')}
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 18 18"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 1v16M1 9h16"
+                />
+              </svg>
+            </button>
+          </div>
+          <DialogDrawer open={open} setOpen={setOpen}>
+            <PostCreateForm fullImage sideImage={false} />
+          </DialogDrawer>
           <Tooltip>
             <TooltipTrigger asChild>
               <button className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 group">
                 <svg
-                  className={cn(
-                    'size-5 text-gray-800 group-hover:text-blue-600',
-                    path.startsWith('/search') && 'text-blue-600',
-                  )}
+                  className="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -121,13 +102,13 @@ const BottomNavigation = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M4 12.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M4 19v-2.25m6-13.5V1m0 2.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM16 19v-2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                   />
                 </svg>
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Settings</p>
+              <p>Search</p>
             </TooltipContent>
           </Tooltip>
           <Tooltip>

@@ -64,6 +64,54 @@ export const UsersController = {
     });
   },
 
+async suggestUser(req: Request, res: Response)  {
+  const {userId} = req.query
+  await tryCatch(async () => {
+    const { page = 1, pageSize = 20, sort, q } = req.query;
+    const followings = await prisma.following.findMany({
+      where : {
+        followerId : userId?.toString()
+      }
+    })
+    const data = await prisma.user
+      .paginate({
+        ...(sort && { orderBy: stringToObject(sort as string) }),
+        where: {
+          ...(q && {
+            OR: [
+              {
+                name: {
+                  contains: q.toString(),
+                  mode: 'insensitive', // Default value: default
+                },
+              },
+              {
+                username: {
+                  contains: q.toString(),
+                  mode: 'insensitive', // Default value: default
+                },
+              },
+            ],
+          }),
+          id : {
+            notIn : [userId!.toString(),...followings.map(f=>f.followingId)]
+          }
+        },
+        select: USER_DTO,
+      })
+      .withPages({
+        limit: +pageSize,
+        page: +page,
+        includePageCount: true,
+      });
+    return res.status(200).json({
+      message: 'Users retrieve successfully!',
+      data: data[0],
+      meta: data[1],
+    });
+  }, res);
+},
+
   async update(req: Request, res: Response) {
     const { id } = req.params;
     if (isEmptyObj(req.body)) {

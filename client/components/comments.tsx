@@ -2,18 +2,13 @@
 import HomeError from '@/app/(user)/home/error';
 import HomeLoading from '@/app/(user)/home/loading';
 import CommentForm from '@/components/comment-form';
+import DeleteComment from '@/components/delete-comment';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import safeFetch from '@/lib/safeFetch';
 import { concatString, fullImagePath, generateBearerToken } from '@/lib/utils';
 import { COMMENTS_SCHEMA } from '@/types/post.types';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { BadgeCheck, Ellipsis } from 'lucide-react';
+import { BadgeCheck } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { QueryInfiniteScroll } from 'react-query-infinite-scroll';
@@ -26,7 +21,7 @@ const Comments = ({ postId }: Props) => {
   const fetchPosts = async ({ pageParam = 1 }) => {
     const { data, error } = await safeFetch(
       COMMENTS_SCHEMA,
-      `/comments?sort[createdAt]=desc&postId=${postId}&page=${pageParam}`,
+      `/comments?postId=${postId}&page=${pageParam}`,
       {
         cache: 'no-store',
         headers: {
@@ -55,7 +50,7 @@ const Comments = ({ postId }: Props) => {
           {(res) => {
             return res.data.map((data) => (
               <div key={data.id}>
-                <header className="w-full flex justify-between items-center mb-2">
+                <header className="w-full flex justify-between items-start mb-2">
                   <div className="flex gap-2 items-center">
                     <Avatar className="size-[30px] rounded  overflow-hidden relative bg-white shadow">
                       <AvatarFallback>{data.user.name.substring(0, 2)}</AvatarFallback>
@@ -78,18 +73,9 @@ const Comments = ({ postId }: Props) => {
                       <p className="text-[10px] font-mono">@{data.user.username}</p>
                     </div>
                   </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild className="border-none outline-none">
-                      <button>
-                        <Ellipsis size={18} />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56" align={'end'}>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
-                      <DropdownMenuItem>Report</DropdownMenuItem>
-                      <DropdownMenuItem>Follow</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  {data.userId === session?.user.id && (
+                    <DeleteComment id={data.id} postId={postId} />
+                  )}
                 </header>
                 <p className="text-sm font-normal">{data.caption}</p>
               </div>

@@ -11,7 +11,8 @@
     "migrate:generate": "prisma generate ",
     "migrate:push": "prisma db push",
     "seed": "npx prisma db seed",
-    "build": "prisma generate && prisma db push && tsup api/index.ts --format esm --dts --minify --clean --sourcemap"
+    "build": "prisma generate && prisma db push && tsup api/index.ts --format esm --dts --minify --clean --sourcemap",
+    "migrate:dev" : "npx prisma studio"
   },
   "keywords": [],
   "author": "",

@@ -56,9 +56,67 @@ export const PostController = {
     }, res);
   },
 
+  async followingPosts(req: Request, res: Response) {
+    const { userId } = req.params;
+    await tryCatch(async () => {
+      const followings =await prisma.following.findMany({where : {
+        followerId : userId?.toString()
+        }})
+      const { page = 1, pageSize = 45, sort, q } = req.query;
+      const data = await prisma.post
+        .paginate({
+          ...(sort && { orderBy: stringToObject(sort as string) }),
+          where: {
+            ...(q && {
+              OR: [
+                {
+                  caption: {
+                    contains: q.toString(),
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            }),
+            userId : {
+              in : [...followings.map(f=>f.followingId)]
+            }
+          },
+          include: {
+            user: {
+              select: USER_DTO_IN_POST,
+            },
+            _count: true,
+            Comment: {
+              include: {
+                user: {
+                  select: USER_DTO_IN_POST,
+                },
+              },
+            },
+            Like: {
+              include: {
+                user: {
+                  select: USER_DTO_IN_POST,
+                },
+              },
+            },
+          },
+        })
+        .withPages({
+          limit: +pageSize,
+          page: +page,
+          includePageCount: true,
+        });
+      return res.status(200).json({
+        message: 'Users retrieve successfully!',
+        data: data[0],
+        meta: data[1],
+      });
+    }, res);
+  },
+
   async store(req: Request, res: Response) {
     await tryCatch(async () => {
-      console.log(req.body);
       if (isEmptyObj(req.body))
         return res.status(400).json({ message: 'Request body not found!' });
       await prisma.post.create({
