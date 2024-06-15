@@ -13,6 +13,7 @@ import {
 import { cn, concatString, fullImagePath } from '@/lib/utils';
 import { POSTS_DATA_TYPE } from '@/types/post.types';
 import { BadgeCheck, Bookmark, Ellipsis, Heart, MessageSquareMore, X } from 'lucide-react';
+import moment from 'moment';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -43,7 +44,7 @@ const PostCard = ({ post }: { post: POSTS_DATA_TYPE }) => {
               {post.user.name}
               {post.user.isAdmin && <BadgeCheck size={14} className="text-blue-500" />}
             </Link>
-            <p className="text-xs font-mono">@{post.user.username}</p>
+            <p className="text-xs font-mono">{moment(post.createdAt).startOf('hour').fromNow()}</p>
           </div>
         </div>
         <DropdownMenu>

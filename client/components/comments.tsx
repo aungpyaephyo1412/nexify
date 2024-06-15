@@ -9,6 +9,7 @@ import { concatString, fullImagePath, generateBearerToken } from '@/lib/utils';
 import { COMMENTS_SCHEMA } from '@/types/post.types';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { BadgeCheck } from 'lucide-react';
+import moment from 'moment/moment';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { QueryInfiniteScroll } from 'react-query-infinite-scroll';
@@ -70,7 +71,9 @@ const Comments = ({ postId }: Props) => {
                         {data.user.name}
                         {data.user.isAdmin && <BadgeCheck size={14} className="text-blue-500" />}
                       </Link>
-                      <p className="text-[10px] font-mono">@{data.user.username}</p>
+                      <p className="text-[10px] font-mono">
+                        {moment(data.createdAt).startOf('hour').fromNow()}
+                      </p>
                     </div>
                   </div>
                   {data.userId === session?.user.id && (

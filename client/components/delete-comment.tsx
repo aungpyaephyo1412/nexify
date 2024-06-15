@@ -1,8 +1,7 @@
 import { deleteComment } from '@/app/(user)/home/_action';
-import LoadingCircle from '@/components/loading-circle';
 import { queryClient } from '@/components/query-provider';
 import { concatString } from '@/lib/utils';
-import { Trash } from 'lucide-react';
+import { Loader2, Trash } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
 const DeleteComment = ({ id, postId }: { id: string; postId: string }) => {
@@ -29,7 +28,11 @@ const DeleteComment = ({ id, postId }: { id: string; postId: string }) => {
       })}
     >
       <button disabled={isSubmitting}>
-        {isSubmitting ? <LoadingCircle className={'size-3'} /> : <Trash size={15} />}
+        {isSubmitting ? (
+          <Loader2 className={'size-4 text-blue-500 animate-spin'} />
+        ) : (
+          <Trash size={15} />
+        )}
       </button>
     </form>
   );
