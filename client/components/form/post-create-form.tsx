@@ -15,9 +15,11 @@ import { useForm } from 'react-hook-form';
 const PostCreateForm = ({
   fullImage = false,
   sideImage = true,
+  setOpen,
 }: {
   fullImage?: boolean;
   sideImage?: boolean;
+  setOpen?: (b: boolean) => void;
 }) => {
   const [imageUrl, setImageUrl] = useState<null | string>();
   const {
@@ -26,7 +28,7 @@ const PostCreateForm = ({
     reset,
     resetField,
     watch,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
   } = useForm({
     resolver: zodResolver(POST_CREATE_SCHEMA),
   });
@@ -63,13 +65,16 @@ const PostCreateForm = ({
           await queryClient.invalidateQueries({
             queryKey: ['for-you'],
           });
+          await queryClient.invalidateQueries({
+            queryKey: ['followings'],
+          });
+          setOpen && setOpen(false);
           return null;
         }
         throw new Error('Something went wrong');
       })}
-      className="px-2 lg:px-4 mb-9"
+      className="px-3 lg:px-6 mb-9"
     >
-      {fullImage && <h1 className="text-lg font-semibold">Create new Post</h1>}
       <div className={cn('bg-white rounded-lg shadow p-5', fullImage && 'shadow-none')}>
         {fullImage && (
           <div className="mb-4">
@@ -96,7 +101,7 @@ const PostCreateForm = ({
           <div className="flex-1">
             <TextareaAutosize
               {...register('caption')}
-              minRows={fullImage ? 6 : 1}
+              minRows={1}
               maxRows={3}
               maxLength={350}
               className="resize-none text-sm outline-none border-b border-b-gray-500 bg-transparent w-full py-3 pr-2 mb-3"
@@ -113,10 +118,10 @@ const PostCreateForm = ({
             )}
 
             <div className="w-full flex justify-between items-center">
-              {!fullImage && (
-                <FileInput {...register('image')} imageUrl={imageUrl} fullImage={false} />
-              )}
               <div className="flex items-center gap-2">
+                {!fullImage && (
+                  <FileInput {...register('image')} imageUrl={imageUrl} fullImage={false} />
+                )}
                 {imageUrl && (
                   <button
                     onClick={() => {

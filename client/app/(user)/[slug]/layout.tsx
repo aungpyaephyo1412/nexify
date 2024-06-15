@@ -3,7 +3,18 @@ import { auth } from '@/auth';
 import EditProfile from '@/components/edit-profile';
 import FollowBtn from '@/components/follow-btn';
 import HeaderNav from '@/components/header-nav';
+import QueryProvider from '@/components/query-provider';
+import SignOut from '@/components/sign-out';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import safeFetch from '@/lib/safeFetch';
 import { concatString, fullImagePath, generateBearerToken } from '@/lib/utils';
 import { USER_BY_ID_SCHEMA } from '@/types/user.types';
@@ -35,7 +46,7 @@ const Layout = async ({
         title={data.data.name}
         description={concatString([data.data._count.Post.toString(), 'posts'], ' ')}
       />
-      <div className="">
+      <div>
         <div className="h-[150px] w-full bg-neutral-400"></div>
         <div className="w-full flex justify-between items-center screen-padding mb-2">
           <div className="size-[100px] lg:size-[150px] rounded-full bg-black -mt-[45px] lg:-mt-[70px] border-4 border-white">
@@ -47,7 +58,22 @@ const Layout = async ({
             </Avatar>
           </div>
           {session?.user.username === slug ? (
-            <EditProfile user={data} />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="rounded-full">
+                  Edit Profile
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <EditProfile user={data} />
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <SignOut />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <FollowBtn followingId={data.data.id} unfollowId={alreadyFollow?.id} />
           )}
@@ -62,7 +88,8 @@ const Layout = async ({
           </div>
           {data.data.bio && <p className="text-sm text-gray-600"> {data.data.bio}</p>}
           <p className="flex items-center gap-x-2 text-xs">
-            <Calendar size={13} /> Joined at {moment(data.data.createdAt).format('ll')}
+            <Calendar size={13} /> {data.data.dateOfBirth ? 'Date of birth' : 'Joined at'}{' '}
+            {moment(data.data.dateOfBirth || data.data.createdAt).format('ll')}
           </p>
         </div>
         <div className="w-full flex gap-x-5 items-center screen-padding mb-7">
@@ -70,7 +97,22 @@ const Layout = async ({
           <div className="hover:underline text-sm">{data.data._count.Followers} Followers</div>
         </div>
       </div>
-      <div>{children}</div>
+      <Tabs defaultValue="posts" className="w-full flex-1 flex flex-col">
+        <TabsList className="h-fit flex justify-start items-center w-full  rounded-none px-2 lg:px-4">
+          <TabsTrigger value="posts" className="py-1 text-gray-950">
+            Posts
+          </TabsTrigger>
+          <TabsTrigger value="followings" className="py-1 text-gray-950">
+            Following
+          </TabsTrigger>
+          <TabsTrigger value="followers" className="py-1 text-gray-950">
+            Followers
+          </TabsTrigger>
+        </TabsList>
+        <TabsList className="w-full h-full p-0 bg-transparent flex-1">
+          <QueryProvider>{children}</QueryProvider>
+        </TabsList>
+      </Tabs>
     </>
   );
 };

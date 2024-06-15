@@ -1,11 +1,13 @@
 'use server';
 
 import { getAuthUser } from '@/app/(user)/_action';
+import { signOut } from '@/auth';
 import safeFetch from '@/lib/safeFetch';
 import { action, concatString, generateBearerToken } from '@/lib/utils';
 import { DEFAULT_RETURN_SCHEMA } from '@/types/default';
 import { USER_FOLLOW_SCHEMA, USER_UNFOLLOW_SCHEMA } from '@/types/user.types';
 import { revalidatePath, revalidateTag } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export const follow = action(USER_FOLLOW_SCHEMA, async (parsedInput) => {
   const user = await getAuthUser();
@@ -52,3 +54,8 @@ export const unfollow = action(USER_UNFOLLOW_SCHEMA, async (parsedInput) => {
   revalidatePath(concatString(['profile', user.username], '-'));
   return data;
 });
+
+export const logout = async () => {
+  await signOut();
+  redirect('/login');
+};

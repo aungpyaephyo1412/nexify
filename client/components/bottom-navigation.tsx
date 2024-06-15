@@ -3,6 +3,7 @@ import DialogDrawer from '@/components/dialog-drawer';
 import PostCreateForm from '@/components/form/post-create-form';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn, concatString } from '@/lib/utils';
+import { X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -85,7 +86,18 @@ const BottomNavigation = () => {
             </button>
           </div>
           <DialogDrawer open={open} setOpen={setOpen}>
-            <PostCreateForm fullImage sideImage={false} />
+            <div className="size-full flex flex-col">
+              <div className="w-full flex justify-between items-center px-4 lg:px-8">
+                <h1>Create Post</h1>
+                <button
+                  onClick={() => setOpen((p) => !p)}
+                  className="cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center"
+                >
+                  <X size={17} />
+                </button>
+              </div>
+              <PostCreateForm fullImage sideImage={false} setOpen={setOpen} />
+            </div>
           </DialogDrawer>
           <Tooltip>
             <TooltipTrigger asChild>

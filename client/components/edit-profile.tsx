@@ -8,7 +8,7 @@ const EditProfile = ({ user }: { user: USER_BY_ID }) => {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button onClick={() => setOpen((p) => !p)} variant={'outline'} className="rounded-full">
+      <Button onClick={() => setOpen((p) => !p)} variant={'outline'} className="w-full">
         Edit Profile
       </Button>
       <DialogDrawer open={open} setOpen={setOpen}>
