@@ -63,7 +63,7 @@ const PostCard = ({ post }: { post: POSTS_DATA_TYPE }) => {
         <p className={cn('text-sm font-normal px-3 md:px-5', 'mb-3')}>{post.caption}</p>
       )}
       {post.imageUrl && (
-        <Avatar className="h-[200px] w-full rounded-none mb-5">
+        <Avatar className="h-[300px] w-full rounded-none mb-5">
           <AvatarImage src={fullImagePath(post.imageUrl)} className="rounded-none" />
         </Avatar>
       )}
@@ -78,6 +78,9 @@ const PostCard = ({ post }: { post: POSTS_DATA_TYPE }) => {
                     await queryClient.invalidateQueries({
                       queryKey: ['for-you'],
                     });
+                    await queryClient.invalidateQueries({
+                      queryKey: ['followings'],
+                    });
                   }}
                   className="cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center"
                 >
@@ -89,6 +92,9 @@ const PostCard = ({ post }: { post: POSTS_DATA_TYPE }) => {
                     await likePost(post.id);
                     await queryClient.invalidateQueries({
                       queryKey: ['for-you'],
+                    });
+                    await queryClient.invalidateQueries({
+                      queryKey: ['followings'],
                     });
                   }}
                   className="cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center"

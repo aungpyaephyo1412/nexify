@@ -8,6 +8,7 @@ export default (router: express.Router) => {
   router
     .get('/posts', verifyUserToken, PostController.index)
     .get('/posts/:id', verifyUserToken, PostController.show)
+    .get('/posts/followings/:userId', verifyUserToken, PostController.followingPosts)
     .delete('/posts/:id', verifyUserToken, PostController.delete)
     .post(
       '/posts',

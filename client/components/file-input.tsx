@@ -1,6 +1,7 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { InputProps } from '@/components/ui/input';
 import { fullImagePath } from '@/lib/utils';
+import { Image as Img } from 'lucide-react';
 import Image from 'next/image';
 import { forwardRef } from 'react';
 interface Props extends InputProps {
@@ -8,9 +9,31 @@ interface Props extends InputProps {
   errorMessage?: string;
   defaultImage?: string | null;
   imageUrl?: string | null;
+  fullImage?: boolean;
 }
 const FileInput = forwardRef<HTMLInputElement, Props>(
-  ({ isError, errorMessage, defaultImage, imageUrl, ...props }, ref) => {
+  ({ isError, errorMessage, defaultImage, imageUrl, fullImage = true, ...props }, ref) => {
+    if (!fullImage) {
+      return (
+        <div>
+          <label
+            htmlFor="image"
+            className="w-fit cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center"
+          >
+            <Img size={15} />
+          </label>
+          <input
+            id="image"
+            type="file"
+            hidden
+            accept={'image/jpeg,image/jpg,image/png'}
+            multiple={false}
+            ref={ref}
+            {...props}
+          />
+        </div>
+      );
+    }
     return (
       <div className="flex items-center justify-center w-full mb-4">
         <label

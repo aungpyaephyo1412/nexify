@@ -1,17 +1,24 @@
 'use client';
 import { createPost } from '@/app/(user)/home/_action';
+import FileInput from '@/components/file-input';
 import { queryClient } from '@/components/query-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import supabase from '@/lib/supabase';
-import { fullImagePath } from '@/lib/utils';
+import { cn, fullImagePath } from '@/lib/utils';
 import { POST_CREATE_SCHEMA } from '@/types/post.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TextareaAutosize } from '@mui/base/TextareaAutosize';
-import { Image as Img, Loader2, X } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-const PostCreateForm = () => {
+const PostCreateForm = ({
+  fullImage = false,
+  sideImage = true,
+}: {
+  fullImage?: boolean;
+  sideImage?: boolean;
+}) => {
   const [imageUrl, setImageUrl] = useState<null | string>();
   const {
     register,
@@ -60,34 +67,42 @@ const PostCreateForm = () => {
         }
         throw new Error('Something went wrong');
       })}
-      className="px-2 lg:px-4"
+      className="px-2 lg:px-4 mb-9"
     >
-      <div className="bg-white rounded-lg shadow p-5">
-        <div className="flex items-start gap-x-5">
-          <div className="size-[50px] rounded-full bg-gray-900">
-            <Avatar className="size-full  mb-5 rounded overflow-hidden relative border-2 border-black">
-              <AvatarFallback className="rounded-none">
-                {session?.user?.name?.substring(0, 2)}
-              </AvatarFallback>
-              {session?.user.profilePicture && (
-                <AvatarImage
-                  alt={'bl bla'}
-                  src={fullImagePath(session?.user.profilePicture)}
-                  className="w-full h-full object-cover rounded-none absolute inset-0"
-                />
-              )}
-            </Avatar>
+      {fullImage && <h1 className="text-lg font-semibold">Create new Post</h1>}
+      <div className={cn('bg-white rounded-lg shadow p-5', fullImage && 'shadow-none')}>
+        {fullImage && (
+          <div className="mb-4">
+            <FileInput {...register('image')} imageUrl={imageUrl} />
           </div>
+        )}
+        <div className="flex items-start gap-x-5">
+          {sideImage && (
+            <div className="size-[50px] rounded-full bg-gray-900">
+              <Avatar className="size-full  mb-5 rounded overflow-hidden relative border-2 border-black">
+                <AvatarFallback className="rounded-none">
+                  {session?.user?.name?.substring(0, 2)}
+                </AvatarFallback>
+                {session?.user.profilePicture && (
+                  <AvatarImage
+                    alt={'bl bla'}
+                    src={fullImagePath(session?.user.profilePicture)}
+                    className="w-full h-full object-cover rounded-none absolute inset-0"
+                  />
+                )}
+              </Avatar>
+            </div>
+          )}
           <div className="flex-1">
             <TextareaAutosize
               {...register('caption')}
-              minRows={1}
+              minRows={fullImage ? 6 : 1}
               maxRows={3}
               maxLength={350}
               className="resize-none text-sm outline-none border-b border-b-gray-500 bg-transparent w-full py-3 pr-2 mb-3"
               placeholder="What’s Happening?"
             />
-            {imageUrl && (
+            {imageUrl && !fullImage && (
               <Avatar className="w-full h-[250px]  mb-5 rounded overflow-hidden relative">
                 <AvatarImage
                   alt={'bl bla'}
@@ -96,24 +111,12 @@ const PostCreateForm = () => {
                 />
               </Avatar>
             )}
+
             <div className="w-full flex justify-between items-center">
+              {!fullImage && (
+                <FileInput {...register('image')} imageUrl={imageUrl} fullImage={false} />
+              )}
               <div className="flex items-center gap-2">
-                <div>
-                  <label
-                    htmlFor="image"
-                    className="w-fit cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center"
-                  >
-                    <Img size={15} />
-                  </label>
-                  <input
-                    id="image"
-                    type="file"
-                    hidden
-                    accept={'image/jpeg,image/jpg,image/png'}
-                    multiple={false}
-                    {...register('image')}
-                  />
-                </div>
                 {imageUrl && (
                   <button
                     onClick={() => {

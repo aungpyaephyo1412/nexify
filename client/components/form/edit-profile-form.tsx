@@ -124,7 +124,7 @@ const EditProfileForm = ({ setOpen, user }: Props) => {
       <DatePicker onChange={setDate} date={date} />
       <Separator />
       <div className="w-full grid grid-cols-2 gap-5">
-        <Button onClick={() => setOpen(false)} variant="outline">
+        <Button type={'button'} onClick={() => setOpen(false)} variant="outline">
           Cancel
         </Button>
         <SubmitButton form={'editProfile'} isLoading={isSubmitting} name={'Update Profile'} />

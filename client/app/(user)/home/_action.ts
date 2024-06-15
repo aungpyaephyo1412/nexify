@@ -85,3 +85,16 @@ export const createComment = async (form: commentForm) => {
   revalidatePath('/home');
   return data;
 };
+
+export const deleteComment = async (id: string) => {
+  const user = await getAuthUser();
+  const { data, error } = await safeFetch(DEFAULT_RETURN_SCHEMA, `/comments/${id}`, {
+    method: 'DELETE',
+    cache: 'no-store',
+    headers: {
+      Authorization: generateBearerToken(user.jwt),
+    },
+  });
+  if (error) return null;
+  return data;
+};

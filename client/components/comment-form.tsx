@@ -33,6 +33,9 @@ const CommentForm = ({ postId }: { postId: string }) => {
             await queryClient.invalidateQueries({
               queryKey: [concatString(['comments', postId])],
             });
+            await queryClient.invalidateQueries({
+              queryKey: ['followings'],
+            });
           }
         })}
         className="flex-1"
