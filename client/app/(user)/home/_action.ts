@@ -98,3 +98,15 @@ export const deleteComment = async (id: string) => {
   if (error) return null;
   return data;
 };
+export const deletePost = async (id: string) => {
+  const user = await getAuthUser();
+  const { data, error } = await safeFetch(DEFAULT_RETURN_SCHEMA, `/posts/${id}`, {
+    method: 'DELETE',
+    cache: 'no-store',
+    headers: {
+      Authorization: generateBearerToken(user.jwt),
+    },
+  });
+  if (error) return null;
+  return data;
+};

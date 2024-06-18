@@ -73,7 +73,7 @@ const PostCreateForm = ({
         }
         throw new Error('Something went wrong');
       })}
-      className="px-3 lg:px-6 mb-9"
+      className="px-3 lg:px-6 mb-9  pt-5"
     >
       <div className={cn('bg-white rounded-lg shadow p-5', fullImage && 'shadow-none')}>
         {fullImage && (

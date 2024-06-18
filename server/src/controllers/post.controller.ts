@@ -6,7 +6,16 @@ import { USER_DTO_IN_POST } from '../helpers/post.helper';
 export const PostController = {
   async index(req: Request, res: Response) {
     await tryCatch(async () => {
-      const { page = 1, pageSize = 45, sort, q } = req.query;
+      const { page = 1, pageSize = 45, sort, q,userId } = req.query;
+      let username;
+      if (userId){
+        const data = await prisma.user.findUnique({where : {
+          username : userId as string
+          }})
+        if (!data)
+          return res.status(400).json({ message: 'Something went wrong!' });
+        username = data.id
+      }
       const data = await prisma.post
         .paginate({
           ...(sort && { orderBy: stringToObject(sort as string) }),
@@ -21,6 +30,7 @@ export const PostController = {
                 },
               ],
             }),
+            ...(username && {userId : username as string})
           },
           include: {
             user: {
