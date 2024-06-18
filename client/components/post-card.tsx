@@ -23,7 +23,7 @@ const PostCard = ({ post }: { post: POSTS_DATA_TYPE }) => {
   const likeByUser = post.Like.find((p) => p.userId === data?.user?.id);
   const [open, setOpen] = useState(false);
   return (
-    <div className="bg-white shadow rounded-lg py-5">
+    <div className="w-full bg-white shadow rounded-lg py-5">
       <header className="w-full flex justify-between items-center mb-5 px-3 md:px-5">
         <div className="flex gap-2 items-center">
           <Avatar className="size-[40px] rounded-full  overflow-hidden relative bg-white shadow">
