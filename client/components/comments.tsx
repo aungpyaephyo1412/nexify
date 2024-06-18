@@ -1,6 +1,5 @@
 'use client';
 import HomeError from '@/app/(user)/home/error';
-import HomeLoading from '@/app/(user)/home/loading';
 import CommentForm from '@/components/comment-form';
 import DeleteComment from '@/components/delete-comment';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -44,9 +43,9 @@ const Comments = ({ postId }: Props) => {
       <div className="space-y-5">
         <QueryInfiniteScroll
           query={query}
-          loading={<HomeLoading />}
+          loading={<div></div>}
           error={<HomeError />}
-          observer={<HomeLoading />}
+          observer={<div></div>}
         >
           {(res) => {
             return res.data.map((data) => (
@@ -72,7 +71,7 @@ const Comments = ({ postId }: Props) => {
                         {data.user.isAdmin && <BadgeCheck size={14} className="text-blue-500" />}
                       </Link>
                       <p className="text-[10px] font-mono">
-                        {moment(data.createdAt).startOf('hour').fromNow()}
+                        {moment(data.createdAt, 'YYYYMMDD').fromNow()}
                       </p>
                     </div>
                   </div>

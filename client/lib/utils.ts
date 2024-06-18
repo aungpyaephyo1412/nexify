@@ -16,3 +16,10 @@ export const generateBearerToken = (token: string): string => concatString(['Bea
 
 export const fullImagePath = (path: string) =>
   concatString([process.env.NEXT_PUBLIC_IMAGE_BASE_URL as string, path]);
+
+const isBrowser = () => typeof window !== 'undefined'; //The approach recommended by Next.js
+
+export function scrollToTop() {
+  if (!isBrowser()) return;
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}

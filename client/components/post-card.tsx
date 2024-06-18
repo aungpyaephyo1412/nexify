@@ -1,13 +1,13 @@
 'use client';
 import { likePost, unlikePost } from '@/app/(user)/home/_action';
 import Comments from '@/components/comments';
+import DeletePost from '@/components/delete-post';
 import DialogDrawer from '@/components/dialog-drawer';
 import { queryClient } from '@/components/query-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn, concatString, fullImagePath } from '@/lib/utils';
@@ -47,18 +47,18 @@ const PostCard = ({ post }: { post: POSTS_DATA_TYPE }) => {
             <p className="text-xs font-mono">{moment(post.createdAt).startOf('hour').fromNow()}</p>
           </div>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="border-none outline-none">
-            <button>
-              <Ellipsis size={18} />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align={'end'}>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-            <DropdownMenuItem>Report</DropdownMenuItem>
-            <DropdownMenuItem>Follow</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {data?.user?.id == post.userId && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="border-none outline-none">
+              <button>
+                <Ellipsis size={18} />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align={'end'}>
+              <DeletePost postId={post.id} imageUrl={post.imageUrl} />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </header>
       {post.caption && (
         <p className={cn('text-sm font-normal px-3 md:px-5', 'mb-3')}>{post.caption}</p>
@@ -82,6 +82,9 @@ const PostCard = ({ post }: { post: POSTS_DATA_TYPE }) => {
                     await queryClient.invalidateQueries({
                       queryKey: ['followings'],
                     });
+                    await queryClient.invalidateQueries({
+                      queryKey: [concatString(['user', post.userId, 'posts'], '-')],
+                    });
                   }}
                   className="cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center"
                 >
@@ -96,6 +99,9 @@ const PostCard = ({ post }: { post: POSTS_DATA_TYPE }) => {
                     });
                     await queryClient.invalidateQueries({
                       queryKey: ['followings'],
+                    });
+                    await queryClient.invalidateQueries({
+                      queryKey: [concatString(['user', post.userId, 'posts'], '-')],
                     });
                   }}
                   className="cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center"
