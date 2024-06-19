@@ -15,8 +15,9 @@ import { QueryInfiniteScroll } from 'react-query-infinite-scroll';
 
 interface Props {
   postId: string;
+  username: string;
 }
-const Comments = ({ postId }: Props) => {
+const Comments = ({ postId, username }: Props) => {
   const { data: session } = useSession({ required: true });
   const fetchPosts = async ({ pageParam = 1 }) => {
     const { data, error } = await safeFetch(
@@ -76,7 +77,7 @@ const Comments = ({ postId }: Props) => {
                     </div>
                   </div>
                   {data.userId === session?.user.id && (
-                    <DeleteComment id={data.id} postId={postId} />
+                    <DeleteComment id={data.id} postId={postId} username={username} />
                   )}
                 </header>
                 <p className="text-sm font-normal">{data.caption}</p>
@@ -85,7 +86,7 @@ const Comments = ({ postId }: Props) => {
           }}
         </QueryInfiniteScroll>
       </div>
-      <CommentForm postId={postId} />
+      <CommentForm postId={postId} username={username} />
     </div>
   );
 };

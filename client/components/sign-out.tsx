@@ -4,11 +4,7 @@ import { Button } from '@/components/ui/button';
 
 const SignOut = () => {
   return (
-    <Button
-      onClick={async () => await logout()}
-      variant="outline"
-      className="w-full cursor-pointer"
-    >
+    <Button size={'sm'} onClick={async () => await logout()} variant="outline">
       Logout
     </Button>
   );

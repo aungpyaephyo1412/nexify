@@ -50,7 +50,8 @@ const EditProfileForm = ({ setOpen, user }: Props) => {
         let supabaseUrl;
         if (data.image && data.image.length > 0) {
           if (userProfile) {
-            await supabase.storage.from('loopfeed').remove([userProfile]);
+            const dd = await supabase.storage.from('loopfeed').remove([userProfile]);
+            console.log('dd', dd);
           }
           const file = data.image[0];
           const { data: d, error } = await supabase.storage
@@ -59,6 +60,7 @@ const EditProfileForm = ({ setOpen, user }: Props) => {
               cacheControl: '3600',
               upsert: false,
             });
+          console.log(error);
           if (error) return null;
           supabaseUrl = d?.path;
         }

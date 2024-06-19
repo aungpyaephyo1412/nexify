@@ -1,10 +1,17 @@
 import { deleteComment } from '@/app/(user)/home/_action';
-import { queryClient } from '@/components/query-provider';
-import { concatString } from '@/lib/utils';
+import { concatString, revalidateKeys } from '@/lib/utils';
 import { Loader2, Trash } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-const DeleteComment = ({ id, postId }: { id: string; postId: string }) => {
+const DeleteComment = ({
+  id,
+  postId,
+  username,
+}: {
+  id: string;
+  postId: string;
+  username: string;
+}) => {
   const {
     handleSubmit,
     formState: { isSubmitting },
@@ -15,15 +22,12 @@ const DeleteComment = ({ id, postId }: { id: string; postId: string }) => {
       onSubmit={handleSubmit(async () => {
         const res = await deleteComment(id);
         if (res) {
-          await queryClient.invalidateQueries({
-            queryKey: ['for-you'],
-          });
-          await queryClient.invalidateQueries({
-            queryKey: [concatString(['comments', postId])],
-          });
-          await queryClient.invalidateQueries({
-            queryKey: ['followings'],
-          });
+          await revalidateKeys([
+            'for-you',
+            'followings',
+            concatString(['comments', postId]),
+            concatString(['user', username, 'posts'], '-'),
+          ]);
         }
       })}
     >

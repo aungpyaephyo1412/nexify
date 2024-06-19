@@ -1,10 +1,9 @@
 'use client';
 import { createPost } from '@/app/(user)/home/_action';
 import FileInput from '@/components/file-input';
-import { queryClient } from '@/components/query-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import supabase from '@/lib/supabase';
-import { cn, fullImagePath } from '@/lib/utils';
+import { cn, concatString, fullImagePath, revalidateKeys } from '@/lib/utils';
 import { POST_CREATE_SCHEMA } from '@/types/post.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TextareaAutosize } from '@mui/base/TextareaAutosize';
@@ -28,7 +27,7 @@ const PostCreateForm = ({
     reset,
     resetField,
     watch,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm({
     resolver: zodResolver(POST_CREATE_SCHEMA),
   });
@@ -62,12 +61,11 @@ const PostCreateForm = ({
         if (res) {
           reset();
           setImageUrl(null);
-          await queryClient.invalidateQueries({
-            queryKey: ['for-you'],
-          });
-          await queryClient.invalidateQueries({
-            queryKey: ['followings'],
-          });
+          await revalidateKeys([
+            'for-you',
+            'followings',
+            concatString(['user', session?.user?.id, 'posts'], '-'),
+          ]);
           setOpen && setOpen(false);
           return null;
         }
@@ -108,7 +106,7 @@ const PostCreateForm = ({
               placeholder="What’s Happening?"
             />
             {imageUrl && !fullImage && (
-              <Avatar className="w-full h-[250px]  mb-5 rounded overflow-hidden relative">
+              <Avatar className="w-full h-[250px] rounded overflow-hidden relative mb-2">
                 <AvatarImage
                   alt={'bl bla'}
                   src={imageUrl}
@@ -116,7 +114,9 @@ const PostCreateForm = ({
                 />
               </Avatar>
             )}
-
+            <p className="text-xs font-medium text-red-500 mb-5">
+              {(errors?.image?.message as string) || ''}
+            </p>
             <div className="w-full flex justify-between items-center">
               <div className="flex items-center gap-2">
                 {!fullImage && (

@@ -4,16 +4,7 @@ import EditProfile from '@/components/edit-profile';
 import FollowBtn from '@/components/follow-btn';
 import HeaderNav from '@/components/header-nav';
 import QueryProvider from '@/components/query-provider';
-import SignOut from '@/components/sign-out';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import safeFetch from '@/lib/safeFetch';
 import { concatString, fullImagePath, generateBearerToken } from '@/lib/utils';
@@ -43,6 +34,7 @@ const Layout = async ({
   return (
     <>
       <HeaderNav
+        currentUserId={data.data.id}
         title={data.data.name}
         description={concatString([data.data._count.Post.toString(), 'posts'], ' ')}
       />
@@ -58,22 +50,7 @@ const Layout = async ({
             </Avatar>
           </div>
           {session?.user.username === slug ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="rounded-full">
-                  Edit Profile
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <EditProfile user={data} />
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <SignOut />
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <EditProfile user={data} />
           ) : (
             <FollowBtn followingId={data.data.id} unfollowId={alreadyFollow?.id} />
           )}
