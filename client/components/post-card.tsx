@@ -3,14 +3,15 @@ import { likePost, unlikePost } from '@/app/(user)/home/_action';
 import Comments from '@/components/comments';
 import DeletePost from '@/components/delete-post';
 import DialogDrawer from '@/components/dialog-drawer';
-import { queryClient } from '@/components/query-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn, concatString, fullImagePath } from '@/lib/utils';
+import { cn, concatString, fullImagePath, revalidateKeys } from '@/lib/utils';
 import { POSTS_DATA_TYPE } from '@/types/post.types';
 import { BadgeCheck, Bookmark, Ellipsis, Heart, MessageSquareMore, X } from 'lucide-react';
 import moment from 'moment';
@@ -55,6 +56,10 @@ const PostCard = ({ post }: { post: POSTS_DATA_TYPE }) => {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align={'end'}>
+              <Button variant="outline" className="w-full">
+                Report
+              </Button>
+              <DropdownMenuSeparator />
               <DeletePost postId={post.id} imageUrl={post.imageUrl} />
             </DropdownMenuContent>
           </DropdownMenu>
@@ -76,15 +81,11 @@ const PostCard = ({ post }: { post: POSTS_DATA_TYPE }) => {
                 <button
                   onClick={async () => {
                     await unlikePost(likeByUser.id, post.id);
-                    await queryClient.invalidateQueries({
-                      queryKey: ['for-you'],
-                    });
-                    await queryClient.invalidateQueries({
-                      queryKey: ['followings'],
-                    });
-                    await queryClient.invalidateQueries({
-                      queryKey: [concatString(['user', post.userId, 'posts'], '-')],
-                    });
+                    await revalidateKeys([
+                      'for-you',
+                      'followings',
+                      concatString(['user', post.user.username, 'posts'], '-'),
+                    ]);
                   }}
                   className="cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center"
                 >
@@ -94,15 +95,11 @@ const PostCard = ({ post }: { post: POSTS_DATA_TYPE }) => {
                 <button
                   onClick={async () => {
                     await likePost(post.id);
-                    await queryClient.invalidateQueries({
-                      queryKey: ['for-you'],
-                    });
-                    await queryClient.invalidateQueries({
-                      queryKey: ['followings'],
-                    });
-                    await queryClient.invalidateQueries({
-                      queryKey: [concatString(['user', post.userId, 'posts'], '-')],
-                    });
+                    await revalidateKeys([
+                      'for-you',
+                      'followings',
+                      concatString(['user', post.user.username, 'posts'], '-'),
+                    ]);
                   }}
                   className="cursor-pointer p-2 rounded-full hover:bg-blue-300/50 flex justify-center items-center"
                 >
@@ -130,7 +127,7 @@ const PostCard = ({ post }: { post: POSTS_DATA_TYPE }) => {
                       <X size={17} />
                     </button>
                   </div>
-                  <Comments postId={post.id} />
+                  <Comments postId={post.id} username={post.user.username} />
                 </div>
               </DialogDrawer>
             </div>

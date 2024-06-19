@@ -1,14 +1,13 @@
 'use client';
 import { createComment } from '@/app/(user)/home/_action';
-import { queryClient } from '@/components/query-provider';
-import { concatString } from '@/lib/utils';
+import { concatString, revalidateKeys } from '@/lib/utils';
 import { CREATE_COMMENT_SCHEMA } from '@/types/post.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TextareaAutosize } from '@mui/base/TextareaAutosize';
 import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-const CommentForm = ({ postId }: { postId: string }) => {
+const CommentForm = ({ postId, username }: { postId: string; username: string }) => {
   const {
     register,
     handleSubmit,
@@ -27,15 +26,12 @@ const CommentForm = ({ postId }: { postId: string }) => {
           });
           if (res) {
             reset();
-            await queryClient.invalidateQueries({
-              queryKey: ['for-you'],
-            });
-            await queryClient.invalidateQueries({
-              queryKey: [concatString(['comments', postId])],
-            });
-            await queryClient.invalidateQueries({
-              queryKey: ['followings'],
-            });
+            await revalidateKeys([
+              'for-you',
+              'followings',
+              concatString(['comments', postId]),
+              concatString(['user', username, 'posts'], '-'),
+            ]);
           }
         })}
         className="flex-1"
